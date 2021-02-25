@@ -5,13 +5,17 @@
         v-for="(item, index) in editableTabs"
         :label="item.title"
         :name="item.name">
-        {{item.content}}
+        <nwk-input></nwk-input>
+        <!-- {{item.content}} -->
     </el-tab-pane>
     </el-tabs>
 </template>
 
 <script>
+import nwkInput from "./nwkInput.vue";
+
 export default {
+    components: { nwkInput },
     name: "treeTabs",
     data() {
       return {
