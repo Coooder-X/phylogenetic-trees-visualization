@@ -23,10 +23,10 @@
                     <el-upload
                         class="upload"
                         drag
-                        accept="nwk"
+                        accept=".nwk"
+                        :on-change="loadFile"
                         action="https://jsonplaceholder.typicode.com/posts/"
                         :limit="1"
-                        on-error="fileError"
                         multiple>
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -36,19 +36,19 @@
         </el-row>
         <el-row :gutter="20" v-show="radio==2">
             <el-col :span="10" :offset="7">
-                    <el-input class="input"
-                        type="textarea"
-                        spellcheck="false"
-                        :autosize="{ minRows: 7, maxRows: 10}"
-                        placeholder="请输入nwk文本"
-                        v-model="textarea">
-                    </el-input>
+                <el-input class="input"
+                    type="textarea"
+                    spellcheck="false"
+                    :autosize="{ minRows: 7, maxRows: 10}"
+                    placeholder="请输入nwk文本"
+                    v-model="textarea">
+                </el-input>
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="10" offset="7">
+            <el-col :span="10" :offset="7">
                 <div class="process">
-                    <el-button type="primary"> {{ "生成" }} </el-button>
+                    <el-button type="primary" @click="loadFileConfirmed"> {{ "生成" }} </el-button>
                 </div>
             </el-col>
         </el-row>
@@ -63,16 +63,40 @@ export default {
         return {
             textarea: '',
             radio: 1,
+            uploadFilename: null,
+            uploadFiles: [],
         }
     },
     methods: {
         openFolder() {
             alert("upload");
         },
+        fileExceed(files, fileList) {
+            alert("文件个数超出限制");
+        },
         fileError(err, file, fileList) {
             alert("文件格式错误！");
+        },
+        loadFile (file, fileList) {
+            this.uploadFilename = file.name
+            this.uploadFiles = fileList
+        },
+        loadFileConfirmed () {
+            if (this.uploadFiles) {
+                let file = this.uploadFiles[0]
+                if (!file) {
+                    alert("请上传文件！");  //  改为msg box
+                    return null;
+                }
+                console.log(file.raw)
+                let reader = new FileReader()
+                reader.onload = async (e) => {
+                    console.log(e.target.result);
+                }
+                reader.readAsText(file.raw)
+            }
         }
-    }
+    },
 }
 </script>
 
