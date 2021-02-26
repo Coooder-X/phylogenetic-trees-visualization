@@ -1,6 +1,4 @@
 <template>
-    <!-- <div style="margin: 20px 0;"></div> -->
-    <!-- <a>{{ "HelloWorld" }}</a> -->
     <div>
         <el-row :gutter="20">
             <el-col :span="10" :offset="7">
@@ -25,6 +23,7 @@
                         drag
                         accept=".nwk"
                         :on-change="loadFile"
+                        :on-success="successLoadFile"
                         action="https://jsonplaceholder.typicode.com/posts/"
                         :limit="1"
                         multiple>
@@ -57,6 +56,8 @@
 </template>
 
 <script>
+import ElementUI from 'element-ui';
+
 export default {
     name: "nwkInput",
     data() {
@@ -77,23 +78,41 @@ export default {
         fileError(err, file, fileList) {
             alert("文件格式错误！");
         },
+        successLoadFile() {
+            ElementUI.Notification({
+                title: 'Accept',
+                message: '上传成功！',
+                type: 'success',
+                position: 'top-right',
+            });
+        },
         loadFile (file, fileList) {
             this.uploadFilename = file.name
             this.uploadFiles = fileList
         },
         loadFileConfirmed () {
-            if (this.uploadFiles) {
-                let file = this.uploadFiles[0]
-                if (!file) {
-                    alert("请上传文件！");  //  改为msg box
-                    return null;
+            if(this.radio == 1) {
+                if (this.uploadFiles) {
+                    let file = this.uploadFiles[0]
+                    if (!file) {
+                        ElementUI.Notification({
+                            title: '警告',
+                            message: '请上传文件！',
+                            type: 'warning',
+                            position: 'top-right',
+                        });
+                        return null;
+                    }
+                    console.log(file.raw)
+                    let reader = new FileReader()
+                    reader.onload = async (e) => {
+                        console.log(e.target.result);
+                    }
+                    reader.readAsText(file.raw)
                 }
-                console.log(file.raw)
-                let reader = new FileReader()
-                reader.onload = async (e) => {
-                    console.log(e.target.result);
-                }
-                reader.readAsText(file.raw)
+            }
+            else {
+                console.log(this.textarea);
             }
         }
     },
@@ -114,7 +133,6 @@ export default {
     font-size: 17px;
     font-family: Tahoma;
     font-weight: bold;
-    /* background-image: url('../assets/upload.jpg'); */
     background-size: auto 18px;
 }
 
