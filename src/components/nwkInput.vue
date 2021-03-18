@@ -114,6 +114,7 @@ export default {
             else {
                 console.log(this.textarea);
             }
+            this.$emit('statusChange');
         }
     },
 }

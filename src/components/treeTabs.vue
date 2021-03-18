@@ -5,20 +5,23 @@
         v-for="(item, index) in editableTabs"
         :label="item.title"
         :name="item.name">
-        <nwk-input></nwk-input>
+        <nwk-input v-if="!hasInput" @statusChange="statusChange"></nwk-input>
+        <svg-area v-else></svg-area>
         <!-- {{item.content}} -->
     </el-tab-pane>
     </el-tabs>
 </template>
 
 <script>
-import nwkInput from "./nwkInput.vue";
+import NwkInput from "./nwkInput.vue";
+import SvgArea from './svgArea.vue';
 
 export default {
-    components: { nwkInput },
+    components: { NwkInput, SvgArea },
     name: "treeTabs",
     data() {
       return {
+        hasInput: false,
         editableTabsValue: '2',
         editableTabs: [{
           title: 'Tab 1',
@@ -33,6 +36,9 @@ export default {
       }
     },
     methods: {
+      statusChange() {
+        this.hasInput = true;
+      },
       handleTabsEdit(targetName, action) {
         if (action === 'add') {
           let newTabName = ++this.tabIndex + '';
