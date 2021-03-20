@@ -28,38 +28,41 @@ export default {
 }
 </script>
 
-<style>
-.el-header{
+<style lang="scss" scoped>
+/deep/ .el-header{
+    padding: 0%;
     background-color: #336699;
     color: rgb(255, 255, 255);
     text-align: center;
     line-height: 50px;
   }
-.el-footer {
+/deep/ .el-footer {
     background-color: #d0dae7;
     color: #333;
     text-align: center;
     line-height: 20px;
   }
   
-.el-aside {
+/deep/ .el-aside {
+    padding: 0%;
     background-color: #36474e;
     color: rgb(255, 255, 255);
     text-align: center;
     line-height: 200px;
   }
   
-.el-main {
+/deep/ .el-main {
+    padding: 0%;
+    height: 610px;  // main 占满屏幕高度
     background-color: #f4f7fa;
     color: #333;
     text-align: center;
     /* line-height: 160px; */
 }
 
-.el-tabs {
-    /* margin-left: 0%; */
-    /* padding: 0 10px; */
-    height: 540px;
+/deep/ .el-tabs {
+    padding: 0%;
+    height: 100%;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     /* line-height: 40px; */
@@ -71,16 +74,16 @@ export default {
     position: relative;
 }
   
-body > .el-container {
-    margin-bottom: 40px;
-}
+// body > .el-container {
+//     margin-bottom: 40px;
+// }
   
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
+//   .el-container:nth-child(5) .el-aside,
+//   .el-container:nth-child(6) .el-aside {
+//     line-height: 260px;
+//   }
   
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  }
+//   .el-container:nth-child(7) .el-aside {
+//     line-height: 320px;
+//   }
 </style>
