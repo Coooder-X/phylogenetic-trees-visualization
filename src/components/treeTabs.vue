@@ -71,8 +71,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-tabs {
+<style  lang="scss" scoped>
+/deep/ .el-tabs {
     /* margin-left: 0%; */
     /* padding: 0 10px; */
     height: 540px;

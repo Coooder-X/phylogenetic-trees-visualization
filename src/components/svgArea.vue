@@ -20,7 +20,7 @@ export default {
 <style scoped>
     #svg { 
         width:100%; 
-        height:470px;
+        height:540px;
         /* margin:20px auto;   */
         background-color:rgba(250, 235, 215, 0.76);
         overflow:hidden; 
