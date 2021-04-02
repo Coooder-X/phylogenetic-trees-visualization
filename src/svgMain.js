@@ -1,7 +1,7 @@
 import ManyBody from "./algorithm/manyBody.js";
 import {judge, choose, caldis, getNodePair, createGraph} from "./algorithm/stop.js" ;
 import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf} from "./algorithm/util.js";
-import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift} from "./algorithm/SDrawUtil.js";
+import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, transformScale} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
 export default function() {
@@ -56,6 +56,7 @@ export default function() {
         paintAllLinks(shiftedNodes, manyBody.edges, pad_Link);
         paintAllNodes(shiftedNodes, pad_Node);
         paintAllTexts(shiftedNodes, manyBody.datas, G, notLeaf, noneNameNodeIdx, pad_Text);
+        transformScale(oSvg);
     }, 10);
 
     function iter() {

@@ -1,3 +1,36 @@
+var scale = 1.0;
+
+export function svgAddMousewheel(oSvg) {
+    oSvg.onmousewheel = ZoomInOut;
+}
+
+function ZoomInOut(e) {
+    e = e || window.event;  
+    if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件               
+        if (e.wheelDelta > 0) { //当滑轮向上滚动时  
+            alert('上滚');
+            scale -= 0.05;
+        }  
+        if (e.wheelDelta < 0) { //当滑轮向下滚动时  
+            alert('下滚');
+            scale += 0.05;
+        }  
+    } else if (e.detail) {  //Firefox滑轮事件  
+        if (e.detail> 0) { //当滑轮向下滚动时  
+            alert('下滚');
+            scale += 0.05;
+        }  
+        if (e.detail< 0) { //当滑轮向上滚动时  
+            alert('上滚');
+            scale -= 0.05;
+        }  
+    } 
+}
+
+export function transformScale(oSvg) {
+    oSvg.setAttribute('transform', 'scale(' + scale + ')');
+}
+
 //  绘制所有连接节点的边
 export function paintAllLinks(nodes, edges, pad) {
     for(let i = 0; i < edges.length; ++i) {
