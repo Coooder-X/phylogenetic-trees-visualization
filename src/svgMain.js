@@ -1,7 +1,7 @@
 import ManyBody from "./algorithm/manyBody.js";
 import {judge, choose, caldis, getNodePair, createGraph} from "./algorithm/stop.js" ;
 import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf} from "./algorithm/util.js";
-import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, transformScale} from "./algorithm/SDrawUtil.js";
+import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
 export default function() {
@@ -14,6 +14,7 @@ export default function() {
     var oG_Line = createShape('g', {'style':'cursor:pointer', 'class':'lineStyle'});
     var oG_Text = createShape('g', {'style':'cursor:pointer', 'class':'textStyle'});
     var oSvg = createShape('svg', {'xmlns':svgNS, 'width':'100%', 'height':'100%' });
+    svgAddMousewheel(oSvg); //  给 svg 画布添加鼠标滚轮缩放事件
     
     oParent.appendChild(oSvg);  //添加到oParent
     
@@ -46,7 +47,7 @@ export default function() {
     
     var pairName = choose(edges, datas), pair = [];
     var record = 0;
-    
+
     // iter();
     
     setInterval(function(){
