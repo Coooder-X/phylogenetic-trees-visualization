@@ -4,9 +4,9 @@ import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf} from "./
 import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
-export default function() {
+export default function(svgName) {
     var svgNS = 'http://www.w3.org/2000/svg';   //命名空间
-    var oParent = document.getElementById("svg");   //获取父节点 才能添加到页面中
+    var oParent = document.getElementById(svgName);   //获取父节点 才能添加到页面中
     // var centerX = oParent.offsetWidth/2;   //中心点横坐标
     // var centerY = oParent.offsetHeight/2;   //中心点纵坐标
     

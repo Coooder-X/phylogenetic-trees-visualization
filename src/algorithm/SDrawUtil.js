@@ -76,8 +76,8 @@ export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad) {
                 let dx = node.x - father.x, dy = node.y - father.y;
                 //  通过找到上一标签（circle标签），获得节点的半径 r
                 let r = 0;
-                if(Number(document.getElementById("svg").getElementsByTagName('circle')[idx] != undefined))
-                    r = Number(document.getElementById("svg").getElementsByTagName('circle')[idx].getAttribute('r'));
+                if(Number(pad.oSvg.getElementsByTagName('circle')[idx] != undefined))
+                    r = Number(pad.oSvg.getElementsByTagName('circle')[idx].getAttribute('r'));
                 let dis = Math.sqrt(dx * dx + dy * dy), gap = 15 + r;    //  gap是节点到字的间距
                 let sin = Math.abs(dy / dis), cos = Math.abs(dx / dis);
                 let alpha = 360 * Math.asin(Math.abs(dy) / dis) / (2 * Math.PI);// alpha是边和x轴锐角绝对值
