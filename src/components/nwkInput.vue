@@ -57,6 +57,7 @@
 
 <script>
 import ElementUI from 'element-ui';
+import {nwk2json, getTree} from '../algorithm/util';
 
 export default {
     name: "nwkInput",
@@ -113,6 +114,15 @@ export default {
                     let reader = new FileReader()
                     reader.onload = async (e) => {
                         this.textarea = e.target.result;
+                        if(this.judgeIsTree(this.textarea) == false) {  //  判断 nwk 格式是否合法，不合法则中断并提示
+                            ElementUI.Notification({
+                                title: 'Error',
+                                message: '不合法的 newick 格式',
+                                type: 'error',
+                                position: 'top-right',
+                            });
+                            return;
+                        }
                         this.$emit('loadTreeInfo', this.svgName, this.textarea);
                         this.$emit('statusChange');
                     }
@@ -120,9 +130,32 @@ export default {
                 }
             }
             else {
+                if(this.judgeIsTree(this.textarea) == false) {  //  判断 nwk 格式是否合法，不合法则中断并提示
+                    ElementUI.Notification({
+                        title: 'Error',
+                        message: '不合法的 newick 格式',
+                        type: 'error',
+                        position: 'top-right',
+                    });
+                    return;
+                }
                 this.$emit('loadTreeInfo', this.svgName, this.textarea);
                 this.$emit('statusChange');
             }
+        },
+        judgeIsTree(nwkText) {
+            if(nwkText == null) {
+                return false;
+            }
+            if(nwkText.length == 0) {
+                return true;
+            }   //  为调试方便，空字符串点击生成是随机生成的树，正式提交毕设时该句可删或改成其它形式
+            let tree = nwk2json(nwkText);
+            let res = getTree(tree);
+            if(res.edges == null || res.datas == null || res.datas.length == 0 || res.edges.length == 0 || res.datas.length-1 != res.edges.length) {
+                return false;
+            }
+            return true;
         }
     },
 }
