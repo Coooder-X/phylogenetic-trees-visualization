@@ -6,9 +6,11 @@
         <el-container>
             <aside-bar></aside-bar>
             <el-container>
-                <el-main>
-                    <tree-tabs></tree-tabs>
-                </el-main>
+                <div @mousewheel.stop.prevent>
+                    <el-main>
+                        <tree-tabs></tree-tabs>
+                    </el-main>
+                </div>
                 <el-footer height="30px">
                     <footer-bar></footer-bar>
                 </el-footer>
