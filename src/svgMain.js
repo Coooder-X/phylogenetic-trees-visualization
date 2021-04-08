@@ -22,6 +22,7 @@ export default function(svgName) {
         startX: 0, startY: 0,
         tmpx: 0, tmpy: 0 //  有关 svg 画布平移、缩放的全局参数
     }
+    oSvg.setAttribute('overflow', 'visible');   //  svg 视窗大小不限
     svgAddMousewheel(oParent, oSvg, svgOptionVariables); //  给 svg 画布添加鼠标滚轮缩放事件
     svgMove(oParent, oSvg, svgOptionVariables);
     
