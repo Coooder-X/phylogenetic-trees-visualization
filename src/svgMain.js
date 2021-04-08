@@ -14,8 +14,16 @@ export default function(svgName) {
     var oG_Line = createShape('g', {'style':'cursor:pointer', 'class':'lineStyle'});
     var oG_Text = createShape('g', {'style':'cursor:pointer', 'class':'textStyle'});
     var oSvg = createShape('svg', {'xmlns':svgNS, 'width':oParent.offsetWidth, 'height':oParent.offsetHeight });
-    svgAddMousewheel(oParent, oSvg); //  给 svg 画布添加鼠标滚轮缩放事件
-    svgMove(oParent, oSvg);
+
+    //  控制 svg 缩放移动的变量，为使多个 tab 分离，不在 Draw.js 中使用全局变量，而是每个实例单独一份
+    let svgOptionVariables = {   
+        scale: 1.0,
+        viewBoxX: 0, viewBoxY: 0,
+        startX: 0, startY: 0,
+        tmpx: 0, tmpy: 0 //  有关 svg 画布平移、缩放的全局参数
+    }
+    svgAddMousewheel(oParent, oSvg, svgOptionVariables); //  给 svg 画布添加鼠标滚轮缩放事件
+    svgMove(oParent, oSvg, svgOptionVariables);
     
     oParent.appendChild(oSvg);  //添加到oParent
     
