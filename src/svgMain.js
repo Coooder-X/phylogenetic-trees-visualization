@@ -13,9 +13,9 @@ export default function(svgName) {
     var oG_Node = createShape('g', {'style':'cursor:pointer', 'class':'circleStyle'});  //  鼠标悬浮在形状上时为手指icon
     var oG_Line = createShape('g', {'style':'cursor:pointer', 'class':'lineStyle'});
     var oG_Text = createShape('g', {'style':'cursor:pointer', 'class':'textStyle'});
-    var oSvg = createShape('svg', {'xmlns':svgNS, 'width':'100%', 'height':'100%' });
-    svgAddMousewheel(oSvg); //  给 svg 画布添加鼠标滚轮缩放事件
-    svgMove(oSvg);
+    var oSvg = createShape('svg', {'xmlns':svgNS, 'width':oParent.offsetWidth, 'height':oParent.offsetHeight });
+    svgAddMousewheel(oParent, oSvg); //  给 svg 画布添加鼠标滚轮缩放事件
+    svgMove(oParent, oSvg);
     
     oParent.appendChild(oSvg);  //添加到oParent
     
