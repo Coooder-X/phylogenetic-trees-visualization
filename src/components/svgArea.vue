@@ -9,12 +9,13 @@ import initSvg from "../svgMain.js";
 export default {
     name: 'SvgArea',
     props: {
-        svgName: String
+        svgName: String,
+        treeInfo: String
     },
     mounted: function() {
         this.$nextTick(() => {
             //  每个 svg 实例都有一个唯一的名字（等于对应tab的content），以便根据 id 操作 DOM 树
-            initSvg(this.svgName);
+            initSvg(this.svgName, this.treeInfo);
         });
     }
 }

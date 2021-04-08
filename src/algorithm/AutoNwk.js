@@ -37,15 +37,15 @@ export default function randomNewick() {
                 childNum--;
                 let child = {};
                 child.name = randomName();
-                child.branch_length = Math.random();
+                child.branch_length = Math.random() / 10;
                 children.push(child);
                 que.push(child);
             }
             now.children = children;
         }
     }
-    console.log(root);
-    console.log(json2nwk(root));
+    // console.log(root);
+    // console.log(json2nwk(root));
     return json2nwk(root);
 }
 

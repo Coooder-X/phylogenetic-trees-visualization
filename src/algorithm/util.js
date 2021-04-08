@@ -115,12 +115,12 @@ export function getTree(tree) {
     return {edges: edges, datas: datas};
 }
 
-function getLen(num) {
-    return num * 80 * 0.3;	//	680		num * 460 * 0.3
+function getLen(num) {//	80*5/1300*5 是老师文件的合适参数
+    return num * 80 * 5;	//	680		num * 460 * 0.3		num * 80 * 0.3
 }
 
 function getE(len) {
-    return len * 1300 * 0.3;	//	100000		len * 700 * 0.3
+    return len * 1300 * 5;	//	100000		len * 700 * 0.3		len * 1300 * 0.3
 }
 
 export function initTreeShape(tree, width=1000, height=600) {

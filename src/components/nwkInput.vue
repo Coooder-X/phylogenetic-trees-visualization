@@ -60,6 +60,12 @@ import ElementUI from 'element-ui';
 
 export default {
     name: "nwkInput",
+    props: {
+        svgName: {
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
             textarea: '',
@@ -93,7 +99,7 @@ export default {
         loadFileConfirmed () {
             if(this.radio == 1) {
                 if (this.uploadFiles) {
-                    let file = this.uploadFiles[0]
+                    let file = this.uploadFiles[0];
                     if (!file) {
                         ElementUI.Notification({
                             title: '警告',
@@ -106,15 +112,17 @@ export default {
                     console.log(file.raw)
                     let reader = new FileReader()
                     reader.onload = async (e) => {
-                        console.log(e.target.result);
+                        this.textarea = e.target.result;
+                        this.$emit('loadTreeInfo', this.svgName, this.textarea);
+                        this.$emit('statusChange');
                     }
                     reader.readAsText(file.raw)
                 }
             }
             else {
-                console.log(this.textarea);
+                this.$emit('loadTreeInfo', this.svgName, this.textarea);
+                this.$emit('statusChange');
             }
-            this.$emit('statusChange');
         }
     },
 }
