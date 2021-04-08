@@ -123,6 +123,10 @@ function getE(len) {
     return len * 1300 * 5;	//	100000		len * 700 * 0.3		len * 1300 * 0.3
 }
 
+export function LenToNum(len) {
+	return len / 80 / 5;
+}
+
 export function initTreeShape(tree, width=1000, height=600) {
 	let nodes = [];
 	let que = new Array(), now = {node: tree, pos: {x: width/2, y: height/2}, alpha: 0};

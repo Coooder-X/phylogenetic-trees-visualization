@@ -1,3 +1,4 @@
+import {LenToNum} from './util.js';
 export function svgAddMousewheel(oParent, oSvg, svgControl) {    //  鼠标滚轮缩放 svg (实际上鼠标动作作用于 svg 的父亲标签 oParent)
     oParent.addEventListener("mousewheel", ZoomInOut, false);
     function ZoomInOut(e) {
@@ -49,7 +50,7 @@ export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布
 export function paintAllLinks(nodes, edges, pad) {
     for(let i = 0; i < edges.length; ++i) {
         let src = nodes[edges[i].source], tar = nodes[edges[i].target];
-        svgLine(src, tar, pad, "#DAB1D5", 4, i);
+        svgLine(src, tar, pad, "#DAB1D5", 4, LenToNum(edges[i].length), i);
     }
 }
 //  绘制所有节点
@@ -120,7 +121,7 @@ export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad) {
 // }
 
 //  封装svg绘制直线
-function svgLine(src, tar, pad, color, width, idx) {
+function svgLine(src, tar, pad, color, width, len, idx) {
     let line = pad.oG.getElementsByTagName('line')[idx];
     if(line != undefined) {
         line.setAttribute('x1', src.x);
@@ -130,6 +131,9 @@ function svgLine(src, tar, pad, color, width, idx) {
     }
     else {
         line = createShape('line', {'x1':src.x, 'y1':src.y, 'x2':tar.x, 'y2':tar.y, 'stroke':color, 'stroke-width':width});
+        let tooltip = createShape('title');
+        tooltip.innerHTML = len;
+        line.appendChild(tooltip);
         pad.oG.appendChild(line);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         line.onmouseenter = function() {
@@ -184,6 +188,9 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, text, idx) {
     else {
         oText = createShape('text', {'x':x, 'y':y, 'fill':color, 'font-size':fontSize, 'text-anchor':'middle', 'font-family':font });
         oText.innerHTML = text;  //添加文字
+        let tooltip = createShape('title');
+        tooltip.innerHTML = text;
+        oText.appendChild(tooltip);
         pad.oG.appendChild(oText);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
     }
