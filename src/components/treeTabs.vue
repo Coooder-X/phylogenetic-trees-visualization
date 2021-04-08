@@ -1,14 +1,13 @@
 <template>
     <el-tabs class="el-tabs" v-model="editableTabsValue" type="border-card" editable @edit="handleTabsEdit">
-    <el-tab-pane
-        :key="item.name"
-        v-for="(item, index) in editableTabs"
-        :label="item.title"
-        :name="item.name">
-        <nwk-input v-if="!hasInput" @statusChange="statusChange"></nwk-input>
-        <svg-area v-else></svg-area>
-        <!-- {{item.content}} -->
-    </el-tab-pane>
+        <el-tab-pane
+            :key="item.name"
+            v-for="(item, index) in editableTabs"
+            :label="item.title"
+            :name="item.name">
+            <nwk-input v-if="!hasInput[index]" @statusChange="statusChange(index)"></nwk-input>
+            <svg-area v-else :svgName="item.content"></svg-area>
+        </el-tab-pane>
     </el-tabs>
 </template>
 
@@ -21,7 +20,7 @@ export default {
     name: "treeTabs",
     data() {
       return {
-        hasInput: false,
+        hasInput: [false, false],
         editableTabsValue: '2',
         editableTabs: [{
           title: 'Tab 1',
@@ -36,25 +35,31 @@ export default {
       }
     },
     methods: {
-      statusChange() {
-        this.hasInput = true;
+      statusChange(index) {
+        this.hasInput[index] = true;
+        this.$forceUpdate();
       },
       handleTabsEdit(targetName, action) {
         if (action === 'add') {
           let newTabName = ++this.tabIndex + '';
           this.editableTabs.push({
-            title: 'New Tab',
+            title: 'Tab' + this.tabIndex,
             name: newTabName,
-            content: 'New Tab content'
+            content: 'Tab ' + this.tabIndex + ' content'
           });
+          this.hasInput.push(false);
           this.editableTabsValue = newTabName;
         }
         if (action === 'remove') {
           let tabs = this.editableTabs;
           let activeName = this.editableTabsValue;
+          let removeIdx = 0;
           if (activeName === targetName) {
             tabs.forEach((tab, index) => {
               if (tab.name === targetName) {
+                removeIdx = index;
+                var list = document.getElementById(tab.content);
+                list.removeChild(list.childNodes[0]); //  删除对应的 svg 实例
                 let nextTab = tabs[index + 1] || tabs[index - 1];
                 if (nextTab) {
                   activeName = nextTab.name;
@@ -62,6 +67,7 @@ export default {
               }
             });
           }
+          this.hasInput.splice(removeIdx, 1);
           
           this.editableTabsValue = activeName;
           this.editableTabs = tabs.filter(tab => tab.name !== targetName);

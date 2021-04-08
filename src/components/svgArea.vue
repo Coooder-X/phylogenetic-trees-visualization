@@ -1,5 +1,5 @@
-<template>
-    <div id="svg"></div>
+<template>  
+    <div :id="svgName" class="svg"></div>
 </template>
 
 <!-- <script type="module" src="D:/MyGitKrakenFile/quadTree/svgMain.js"> -->
@@ -8,9 +8,13 @@ import initSvg from "../svgMain.js";
 
 export default {
     name: 'SvgArea',
+    props: {
+        svgName: String
+    },
     mounted: function() {
         this.$nextTick(() => {
-            initSvg();
+            //  每个 svg 实例都有一个唯一的名字（等于对应tab的content），以便根据 id 操作 DOM 树
+            initSvg(this.svgName);
         });
     }
 }
@@ -18,7 +22,7 @@ export default {
 </script>
 
 <style scoped>
-    #svg { 
+    .svg { 
         border-style:solid;
         border-color: black;
         border-width: 1px;

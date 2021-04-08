@@ -4,18 +4,18 @@ import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf} from "./
 import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
-export default function() {
+export default function(svgName) {
     var svgNS = 'http://www.w3.org/2000/svg';   //命名空间
-    var oParent = document.getElementById("svg");   //获取父节点 才能添加到页面中
+    var oParent = document.getElementById(svgName);   //获取父节点 才能添加到页面中
     // var centerX = oParent.offsetWidth/2;   //中心点横坐标
     // var centerY = oParent.offsetHeight/2;   //中心点纵坐标
     
     var oG_Node = createShape('g', {'style':'cursor:pointer', 'class':'circleStyle'});  //  鼠标悬浮在形状上时为手指icon
     var oG_Line = createShape('g', {'style':'cursor:pointer', 'class':'lineStyle'});
     var oG_Text = createShape('g', {'style':'cursor:pointer', 'class':'textStyle'});
-    var oSvg = createShape('svg', {'xmlns':svgNS, 'width':'100%', 'height':'100%' });
-    svgAddMousewheel(oSvg); //  给 svg 画布添加鼠标滚轮缩放事件
-    svgMove(oSvg);
+    var oSvg = createShape('svg', {'xmlns':svgNS, 'width':oParent.offsetWidth, 'height':oParent.offsetHeight });
+    svgAddMousewheel(oParent, oSvg); //  给 svg 画布添加鼠标滚轮缩放事件
+    svgMove(oParent, oSvg);
     
     oParent.appendChild(oSvg);  //添加到oParent
     
