@@ -4,7 +4,7 @@ import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf} from "./
 import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
-export default function(svgName, treeInfo) {
+export default function(svgName, EditData, treeInfo) {
     var svgNS = 'http://www.w3.org/2000/svg';   //命名空间
     var oParent = document.getElementById(svgName);   //获取父节点 才能添加到页面中
     // var centerX = oParent.offsetWidth/2;   //中心点横坐标
@@ -66,7 +66,7 @@ export default function(svgName, treeInfo) {
         let shiftedNodes = positionShift(screenWidth, screenHeight, treeWidth, treeHeight, manyBody.nodes);
         paintAllLinks(shiftedNodes, manyBody.edges, pad_Link);
         paintAllNodes(shiftedNodes, pad_Node);
-        paintAllTexts(shiftedNodes, manyBody.datas, G, notLeaf, noneNameNodeIdx, pad_Text);
+        paintAllTexts(shiftedNodes, manyBody.datas, G, notLeaf, noneNameNodeIdx, pad_Text, EditData);
     }, 10);
 
     function iter() {

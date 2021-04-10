@@ -60,12 +60,12 @@ export function paintAllNodes(nodes, pad) {
     });
 }
 //  绘制所有节点的文字
-export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad) {
+export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad, EditData) {
     let fontSize = 20;
     nodes.forEach((node, idx) => {
         if(!filterSet.has(idx)) {   //  若name不为null
             if(notLeaf.has(idx)) { //  若当前点不是叶节点，不打印
-                svgText(node.x + 8, node.y - 8, pad, 0, fontSize, "Georgia", "black", "", idx);
+                svgText(node.x + 8, node.y - 8, pad, 0, fontSize, "Georgia", "black", "", idx, EditData.textData);
             }
             else { //  打印叶节点
                 let father = nodes[G[idx][0].pos];
@@ -88,11 +88,11 @@ export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad) {
                 }   //  计算出文字应旋转的角度alpha（x轴正向是0°，顺时针是正方向）
                 dx = (gap * cos) * (dx < 0? -1 : 1), dy = (gap * sin) * (dy < 0? -1 : 1);
                 // console.log(alpha);
-                svgText(node.x + dx, node.y + dy, pad, alpha, fontSize, "Georgia", "black", datas[idx].name, idx);
+                svgText(node.x + dx, node.y + dy, pad, alpha, fontSize, "Georgia", "black", datas[idx].name, idx, EditData.textData);
             }
         }
         else {  //  name为null
-            svgText(node.x + 8, node.y - 8, pad, 0, fontSize, "Georgia", "black", "", idx);
+            svgText(node.x + 8, node.y - 8, pad, 0, fontSize, "Georgia", "black", "", idx, EditData.textData);
         }
     });
 }
@@ -179,7 +179,7 @@ function svgPoint(x, y, pad, color, radius, idx) {    //  pad {oG: , oSvg: }
 }
 
 //  封装svg绘制文字
-function svgText(x, y, pad, alpha = 0, fontSize, font, color, text, idx) {
+function svgText(x, y, pad, alpha = 0, fontSize, font, color, text, idx, textData) {
     let oText = pad.oG.getElementsByTagName('text')[idx];
     if(oText != undefined) {
         oText.setAttribute('x', x);
@@ -196,6 +196,10 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, text, idx) {
     }
     oText.setAttribute("text-anchor", "start"); //  text-anchor="start"时，(x,y)为<text>的起始坐标
     oText.setAttribute("transform", 'rotate(' + alpha + ' ' + x + ' ' + y + ')');   // 设置文字旋转角度和旋转中心
+    oText.onclick = function() {  //  传递的 textData 是对象引用，引用了svgArea.vue中的data，绑定修改，控制弹窗打开
+        textData.editTextDialogOpen = true;
+        textData.pointName = text;  //  向弹窗传递了当前节点的 name
+    };
 }
 
 //  绘制重心
