@@ -3,7 +3,7 @@
         <div :id="svgName" class="svg"></div>
         <edit-text 
             :dialogFormVisible.sync="EditData.textData.editTextDialogOpen"
-            :pointName="EditData.textData.pointName"
+            :dataObj="EditData.textData.dataObj"
             @closeEditText="closeEditText"
             @updateName="updateName"/>
     </div>
@@ -26,7 +26,7 @@ export default {
             EditData: { //  专门传递编辑的数据的对象，用于传引用给 SDraw 对 svg 进行编辑
                 textData: { //  修改节点名称的数据块
                     editTextDialogOpen: false,
-                    pointName: ''
+                    dataObj: {}
                 },
                 nodeData: {
 
@@ -48,7 +48,7 @@ export default {
             this.EditData.textData.editTextDialogOpen = false;
         },
         updateName(name) {
-            this.EditData.textData.pointName = name;
+            this.EditData.textData.dataObj.name = name;
         }
     }
 }

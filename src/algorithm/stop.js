@@ -15,13 +15,13 @@ export function caldis(pair) {
 export function choose(edges, datas) {
     let pair = [], G = createGraph(edges);
     let start = bfs(0, G);
-    pair.push(datas[start].name);
-    pair.push(datas[bfs(start, G)].name);
+    pair.push(datas[start]);
+    pair.push(datas[bfs(start, G)]);
     return pair;
 }
 
 export function getNodePair(pair, quadTree) {    // 根据树直径的两个端点name，查找TreeNode节点返回
-    return [quadTree.map.get(pair[0]), quadTree.map.get(pair[1])];
+    return [quadTree.map.get(pair[0].name), quadTree.map.get(pair[1].name)];
 }
  /*   
     寻找最远点
