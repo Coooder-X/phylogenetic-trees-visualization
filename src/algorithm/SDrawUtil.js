@@ -164,7 +164,7 @@ function svgPoint(x, y, pad, color, radius, idx) {    //  pad {oG: , oSvg: }
         pad.oG.appendChild(circle);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         circle.onmouseenter = function() {
-            startMovePoint(pad.oG.getElementsByTagName('circle')[idx], 1.8 * radius, radius); //this是g标签 要找到圆 起始值为半径40 目标变成30
+            startMovePoint(circle, 1.8 * radius, radius); //this是g标签 要找到圆 起始值为半径40 目标变成30
             circle.setAttribute('fill', '#FF9224');
             circle.setAttribute('stroke', '#FF9224');
         }
@@ -194,6 +194,12 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, datai, idx, textDa
         oText.appendChild(tooltip);
         pad.oG.appendChild(oText);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
+        oText.onmouseenter = function() {
+            startMoveText(oText, 1.3 * fontSize, fontSize);
+        };
+        oText.onmouseleave = function() {
+            startMoveText(oText, fontSize, 1.3 * fontSize);
+        };
     }
     oText.setAttribute("text-anchor", "start"); //  text-anchor="start"时，(x,y)为<text>的起始坐标
     oText.setAttribute("transform", 'rotate(' + alpha + ' ' + x + ' ' + y + ')');   // 设置文字旋转角度和旋转中心
@@ -238,7 +244,7 @@ function startMovePoint(obj, r1, r2) {
     clearInterval(obj.timer);
     obj.timer = setInterval(function(){
         obj.speed += (overR - nowR) / 6;
-        obj.speed *= 0.8; //摩擦系数
+        obj.speed *= 0.6; //摩擦系数
         if(Math.abs(overR - nowR) <= 1 && Math.abs(obj.speed) <= 1) {
             clearInterval(obj.timer);
             obj.setAttribute('r', overR);
@@ -268,6 +274,28 @@ function startMoveLine(obj, r1, r2) {
             obj.setAttribute('stroke-width', nowR);
         }
     }, 30);
+}
+
+//鼠标移入移出text时的弹性变化
+function startMoveText(obj, r1, r2) {
+    var tarR = r1;
+    var nowR = r2;
+    obj.speed = 0.7 * (tarR > nowR? 1 : -1);
+    clearInterval(obj.timer);
+    obj.timer = setInterval(function(){
+        obj.speed *= 1.7;
+        if(obj.speed > 0) {
+            if(nowR < tarR) {
+                nowR += obj.speed;
+                obj.setAttribute('font-size', nowR);
+            }
+        } else {
+            if(nowR > tarR) {
+                nowR += obj.speed;
+                obj.setAttribute('font-size', nowR);
+            }
+        }
+    }, 15);
 }
 
 export function positionShift(screenWidth, screenHeight, treeWidth, treeHeight, nodes) {
