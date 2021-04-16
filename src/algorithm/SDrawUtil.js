@@ -24,6 +24,9 @@ export function svgAddMousewheel(oParent, oSvg, svgControl) {    //  鼠标滚�
 }
 
 var isMove = false;
+var inNodeSelect = false;
+var inEdgeSelect = false;
+
 export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布 (实际上鼠标动作作用于 svg 的父亲标签 oParent)
     oParent.addEventListener('mousedown', function (e) {
         oParent.setAttribute('style', 'cursor: move');
@@ -47,16 +50,17 @@ export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布
 }
 
 //  绘制所有连接节点的边
-export function paintAllLinks(nodes, edges, pad) {
+export function paintAllLinks(nodes, edges, pad, EditData) {
+    console.log(EditData);
     for(let i = 0; i < edges.length; ++i) {
         let src = nodes[edges[i].source], tar = nodes[edges[i].target];
-        svgLine(src, tar, pad, "#DAB1D5", 4, LenToNum(edges[i].length), i);
+        svgLine(src, tar, pad, EditData.edgeData, EditData.edgeData.lineWidth, LenToNum(edges[i].length), i);
     }
 }
 //  绘制所有节点
-export function paintAllNodes(nodes, pad) {
+export function paintAllNodes(nodes, pad, EditData) {
     nodes.forEach((node, idx) => {
-        svgPoint(node.x, node.y, pad, 'black', 5, idx);
+        svgPoint(node.x, node.y, pad, EditData.nodeData, idx);
     });
 }
 //  绘制所有节点的文字
@@ -121,30 +125,32 @@ export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad, EditData
 // }
 
 //  封装svg绘制直线
-function svgLine(src, tar, pad, color, width, len, idx) {
+function svgLine(src, tar, pad, edgeData, width, len, idx) {
+    let color = edgeData.lineColors[idx];
     let line = pad.oG.getElementsByTagName('line')[idx];
     if(line != undefined) {
         line.setAttribute('x1', src.x);
         line.setAttribute('y1', src.y);
         line.setAttribute('x2', tar.x);
         line.setAttribute('y2', tar.y);
+        line.setAttribute('stroke', color == null? '#DAB1D5' : color);
+        if(inEdgeSelect == false)
+            line.setAttribute('stroke-width', edgeData.lineWidth);
     }
     else {
-        line = createShape('line', {'x1':src.x, 'y1':src.y, 'x2':tar.x, 'y2':tar.y, 'stroke':color, 'stroke-width':width});
+        line = createShape('line', {'x1':src.x, 'y1':src.y, 'x2':tar.x, 'y2':tar.y, 'stroke':'#DAB1D5', 'stroke-width':width});
         let tooltip = createShape('title');
         tooltip.innerHTML = len;
         line.appendChild(tooltip);
         pad.oG.appendChild(line);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         line.onmouseenter = function() {
-            startMoveLine(line, width * 1.8, width * 1.3);  //  选中动画特效
-            //...修改线的颜色
-            line.setAttribute('stroke-width', width * 1.5);
-            line.setAttribute('stroke', 'red');
+            inEdgeSelect = true;
+            startMoveLine(line, 1.0, 1.5, edgeData);  //  选中动画特效
         }
         line.onmouseleave = function() {
-            line.setAttribute('stroke-width', width);
-            line.setAttribute('stroke', color);
+            startMoveLine(line, 1.5, 1.0, edgeData);  //  选中动画特效
+            inEdgeSelect = false;
         };
     }
 }
@@ -153,24 +159,32 @@ function svgLine(src, tar, pad, color, width, len, idx) {
   封装svg绘制节点
   x,y 圆心坐标; pad为父标签集合; idx为该节点（节点或重心）索引（它们不在一个g标签内）
 */
-function svgPoint(x, y, pad, color, radius, idx) {    //  pad {oG: , oSvg: }
+function svgPoint(x, y, pad, nodeData, idx) {    //  pad {oG: , oSvg: }
+    let color = nodeData.nodeColors[idx];
+    let strokeColor = nodeData.strokeColors[idx];
+    let radius = nodeData.nodeRadius;
     let circle = pad.oG.getElementsByTagName('circle')[idx];
     if(circle != undefined) {
         circle.setAttribute('cx', x);
         circle.setAttribute('cy', y);
+        circle.setAttribute('fill', color);
+        circle.setAttribute('stroke', strokeColor);
+        if(inNodeSelect == false) {
+            circle.setAttribute('r', radius);
+            circle.setAttribute('stroke-width', radius*0.2);
+        }
     }
     else {
-        circle = createShape('circle', {'cx':x, 'cy':y, 'r':radius  ,'fill':color, 'stroke':'black', 'stroke-width':'1'});
+        circle = createShape('circle', {'cx':x, 'cy':y, 'r':radius  ,'fill':color, 'stroke':strokeColor, 'stroke-width':radius*0.2});
         pad.oG.appendChild(circle);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         circle.onmouseenter = function() {
-            startMovePoint(circle, 1.8 * radius, radius); //this是g标签 要找到圆 起始值为半径40 目标变成30
-            circle.setAttribute('fill', '#FF9224');
-            circle.setAttribute('stroke', '#FF9224');
+            inNodeSelect = true;
+            startMovePoint(circle, 1.0, 1.3, nodeData); //this是g标签 要找到圆 起始值为半径40 目标变成30
         }
         circle.onmouseleave = function() {
-            circle.setAttribute('fill', color);
-            circle.setAttribute('stroke', color);
+            startMovePoint(circle, 1.3, 1.0, nodeData);
+            inNodeSelect = false;
         };
         // circle.onmouseclick = function() {
         //     // console.log("click");
@@ -205,7 +219,6 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, datai, idx, textDa
     oText.setAttribute("transform", 'rotate(' + alpha + ' ' + x + ' ' + y + ')');   // 设置文字旋转角度和旋转中心
     oText.onclick = function() {  //  传递的 textData 是对象引用，引用了svgArea.vue中的data，绑定修改，控制弹窗打开
         textData.editTextDialogOpen = true;
-        console.log(datai);
         textData.dataObj = datai;  //  向弹窗传递了当前节点的 name
     };
 }
@@ -237,43 +250,49 @@ export function createShape(tag, objAttr) {       //封装一个创建标签的�
 }
 
 //鼠标移入移出时的弹性变化
-function startMovePoint(obj, r1, r2) {
-    var nowR = r1;
-    var overR = r2;
+function startMovePoint(obj, begin, end, nodeData) {
+    var nowR = begin * nodeData.nodeRadius;
+    var tarR = end * nodeData.nodeRadius;
     obj.speed = 0;
+    obj.speed = 0.7 * (tarR > nowR? 1 : -1);
     clearInterval(obj.timer);
     obj.timer = setInterval(function(){
-        obj.speed += (overR - nowR) / 6;
-        obj.speed *= 0.6; //摩擦系数
-        if(Math.abs(overR - nowR) <= 1 && Math.abs(obj.speed) <= 1) {
-            clearInterval(obj.timer);
-            obj.setAttribute('r', overR);
+        obj.speed *= 1.3;
+        if(obj.speed > 0) {
+            if(nowR < tarR) {
+                nowR += obj.speed;
+                obj.setAttribute('r', nowR);
+            }
+        } else {
+            if(nowR > tarR) {
+                nowR += obj.speed;
+                obj.setAttribute('r', nowR);
+            }
         }
-        else{
-            nowR += obj.speed;
-            obj.setAttribute('r', nowR);
-        }
-    }, 30);
+    }, 15);
 }
 
 //鼠标移入移出时的弹性变化
-function startMoveLine(obj, r1, r2) {
-    var nowR = r1;
-    var overR = r2;
+function startMoveLine(obj, begin, end, edgeData) {
+    var nowR = begin * edgeData.lineWidth;
+    var tarR = end * edgeData.lineWidth;
     obj.speed = 0;
+    obj.speed = 0.7 * (tarR > nowR? 1 : -1);
     clearInterval(obj.timer);
     obj.timer = setInterval(function(){
-        obj.speed += (overR - nowR) / 6;
-        obj.speed *= 0.8; //摩擦系数
-        if(Math.abs(overR - nowR) <= 1 && Math.abs(obj.speed) <= 1) {
-            clearInterval(obj.timer);
-            obj.setAttribute('stroke-width', overR);
+        obj.speed *= 1.3;
+        if(obj.speed > 0) {
+            if(nowR < tarR) {
+                nowR += obj.speed;
+                obj.setAttribute('stroke-width', nowR);
+            }
+        } else {
+            if(nowR > tarR) {
+                nowR += obj.speed;
+                obj.setAttribute('stroke-width', nowR);
+            }
         }
-        else{
-            nowR += obj.speed;
-            obj.setAttribute('stroke-width', nowR);
-        }
-    }, 30);
+    }, 15);
 }
 
 //鼠标移入移出text时的弹性变化
@@ -283,7 +302,7 @@ function startMoveText(obj, r1, r2) {
     obj.speed = 0.7 * (tarR > nowR? 1 : -1);
     clearInterval(obj.timer);
     obj.timer = setInterval(function(){
-        obj.speed *= 1.7;
+        obj.speed *= 1.3;
         if(obj.speed > 0) {
             if(nowR < tarR) {
                 nowR += obj.speed;

@@ -13,6 +13,7 @@
 <script>
 import initSvg from "../svgMain.js";
 import EditText from './editText';
+import bus from '../bus.js';
 
 export default {
     name: 'SvgArea',
@@ -29,15 +30,51 @@ export default {
                     dataObj: {}
                 },
                 nodeData: {
-
+                    nodeRadius: 5,
+                    nodeColors: [],
+                    strokeColors: []
                 },
                 edgeData: {
-
+                    lineWidth: 4,
+                    lineColors: []
                 }
             }
         };
     },
     created: function() {
+        bus.$on('editNodeRadius', data => {
+            this.EditData.nodeData.nodeRadius = data;
+        });
+        bus.$on('editLineWidth', data => {
+            this.EditData.edgeData.lineWidth = data;
+        });
+        bus.$on('editAllNodeColor', data => {
+            if(this.EditData.nodeData.nodeColors.length == 0) 
+                for(let i = 0; i < 1000; ++i) {
+                    this.EditData.nodeData.nodeColors.push(data);
+            } else {
+                for(let i = 0; i < this.EditData.nodeData.nodeColors.length; ++i)
+                    this.EditData.nodeData.nodeColors[i] = data;
+            }
+        });
+        bus.$on('editAllStrokeColor', data => {
+            if(this.EditData.nodeData.strokeColors.length == 0) {
+                for(let i = 0; i < 1000; ++i)
+                    this.EditData.nodeData.strokeColors.push(data);
+            } else {
+                for(let i = 0; i < this.EditData.nodeData.strokeColors.length; ++i)
+                    this.EditData.nodeData.strokeColors[i] = data;
+            }
+        });
+        bus.$on('editAllEdgeColor', data => {
+            if(this.EditData.edgeData.lineColors.length == 0) {
+                for(let i = 0; i < 1000; ++i)
+                    this.EditData.edgeData.lineColors.push(data);
+            } else {
+                for(let i = 0; i < this.EditData.edgeData.lineColors.length; ++i)
+                    this.EditData.edgeData.lineColors[i] = data;
+            }
+        });
         this.$nextTick(() => {
             //  每个 svg 实例都有一个唯一的名字（等于对应tab的content），以便根据 id 操作 DOM 树
             initSvg(this.svgName, this.EditData, this.treeInfo);

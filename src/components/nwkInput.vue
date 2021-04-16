@@ -58,6 +58,7 @@
 <script>
 import ElementUI from 'element-ui';
 import {nwk2json, getTree} from '../algorithm/util';
+import bus from '../bus.js';
 
 export default {
     name: "nwkInput",
@@ -125,6 +126,7 @@ export default {
                         }
                         this.$emit('loadTreeInfo', this.svgName, this.textarea);
                         this.$emit('statusChange');
+                        bus.$emit('sliderDisabled', false);
                     }
                     reader.readAsText(file.raw)
                 }
@@ -141,6 +143,7 @@ export default {
                 }
                 this.$emit('loadTreeInfo', this.svgName, this.textarea);
                 this.$emit('statusChange');
+                bus.$emit('sliderDisabled', false);
             }
         },
         judgeIsTree(nwkText) {
