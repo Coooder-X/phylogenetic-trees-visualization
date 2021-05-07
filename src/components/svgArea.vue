@@ -84,7 +84,7 @@ export default {
         });
         bus.$on('editBackgroundColor', data => {
             document.getElementById(this.svgName).style.backgroundColor = data;
-        })
+        });
         bus.$on('editAllEdgeColor', data => {
             if(this.EditData.edgeData.lineColors.length == 0) {
                 for(let i = 0; i < 1000; ++i)

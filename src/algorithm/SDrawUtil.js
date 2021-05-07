@@ -29,14 +29,14 @@ var inEdgeSelect = false;
 
 export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布 (实际上鼠标动作作用于 svg 的父亲标签 oParent)
     oParent.addEventListener('mousedown', function (e) {
-        oParent.setAttribute('style', 'cursor: move');
+        oParent.style.cursor = 'move';
         isMove = true;
         svgControl.startX = e.pageX;
         svgControl.startY = e.pageY;
     });
     oParent.addEventListener('mouseup', function (e) {
         isMove = false;
-        oParent.setAttribute('style', 'cursor: default');
+        oParent.style.cursor = 'default';
         svgControl.viewBoxX += svgControl.tmpx, svgControl.viewBoxY += svgControl.tmpy;
     });
     oParent.addEventListener('mousemove', function (e) {
