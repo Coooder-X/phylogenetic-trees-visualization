@@ -82,6 +82,9 @@ export default {
                     this.EditData.nodeData.strokeColors[i] = data;
             }
         });
+        bus.$on('editBackgroundColor', data => {
+            document.getElementById(this.svgName).style.backgroundColor = data;
+        })
         bus.$on('editAllEdgeColor', data => {
             if(this.EditData.edgeData.lineColors.length == 0) {
                 for(let i = 0; i < 1000; ++i)
@@ -123,7 +126,7 @@ export default {
         height:540px;
         margin: 0%;
         /* margin:20px auto;   */
-        background-color:rgba(250, 235, 215, 0.76);
+        background-color:rgba(250, 235, 215, 0.56);
         overflow:hidden; 
         /* margin-left:auto; 
         margin-right:auto; 

@@ -82,6 +82,15 @@
                         </el-color-picker>
                     </template>
                 </el-menu-item>
+                <el-menu-item index="1-7">
+                    <template slot="title"> {{ "背景颜色：  " }}
+                        <el-color-picker
+                            v-model="treeStyle.backgroundColor"
+                            @change="editBackgroundColor"
+                            :predefine="treeStyle.predefineColors">
+                        </el-color-picker>
+                    </template>
+                </el-menu-item>
             </el-submenu>
             <!-- <el-menu-item index="2">
                 <i class="el-icon-menu"></i>
@@ -121,6 +130,7 @@ export default {
                 nodesColor: '#000000',
                 strokeColor: '#000000',
                 edgesColor: '#DAB1D5',
+                backgroundColor: 'rgba(250, 235, 215, 0.56)',
                 predefineColors: [
                     '#ff4500',
                     '#ff8c00',
@@ -158,6 +168,9 @@ export default {
         },
         editAllEdgeColor() {
             bus.$emit('editAllEdgeColor', this.treeStyle.edgesColor);
+        },
+        editBackgroundColor() {
+            bus.$emit('editBackgroundColor', this.treeStyle.backgroundColor);
         }
     },
     mounted() {
