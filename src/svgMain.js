@@ -1,6 +1,6 @@
 import ManyBody from "./algorithm/manyBody.js";
 import {judge, choose, caldis, getNodePair, createGraph} from "./algorithm/stop.js" ;
-import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf} from "./algorithm/util.js";
+import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf, fatherEdgeAngle} from "./algorithm/util.js";
 import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
@@ -54,6 +54,7 @@ export default function(svgName, EditData, treeInfo) {
     var manyBody = new ManyBody(null, treeWidth, treeHeight);
     manyBody.nodes = nodes, manyBody.datas = datas, manyBody.edges = edges;
     manyBody.buildTree();
+    EditData.NodeCount = manyBody.nodes.length;
     
     var pairName = choose(edges, datas), pair = [];
     var record = 0;
@@ -67,6 +68,26 @@ export default function(svgName, EditData, treeInfo) {
         paintAllLinks(shiftedNodes, manyBody.edges, pad_Link, EditData);
         paintAllNodes(shiftedNodes, pad_Node, EditData);
         paintAllTexts(shiftedNodes, manyBody.datas, G, notLeaf, noneNameNodeIdx, pad_Text, EditData);
+        if(EditData.nodeData.newData.name != undefined) {
+            let tmp = EditData.nodeData;
+            let newData = {name: tmp.newData.name, E: tmp.newData.E};
+            //  随机一个角度，初始化新增节点的位置
+            let fatherNode = manyBody.nodes[tmp.newEdge.source];
+            let randomAngle = fatherEdgeAngle(0);
+            let newNode = {x: fatherNode.x + Math.cos(randomAngle) * tmp.newEdge.length, y: fatherNode.y + Math.sin(randomAngle) * tmp.newEdge.length};
+            let newEdge = {source: tmp.newEdge.source, target: tmp.newEdge.target, length: tmp.newEdge.length};
+            manyBody.nodes.push(newNode);
+            manyBody.edges.push(newEdge);
+            manyBody.datas.push(newData);
+            tmp.newNode = tmp.newEdge = tmp.newData = {};
+            EditData.NodeCount = manyBody.nodes.length;
+            G = createGraph(edges);
+
+            pairName = choose(edges, datas), pair = []; //  添加节点后，重新迭代
+            record = 0;
+            // iter();
+            paintAmimation();
+        }
     }, 10);
 
     function iter() {

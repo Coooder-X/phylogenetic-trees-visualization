@@ -94,4 +94,9 @@ export default class ManyBody {
         node.y = Math.max(node.y, 0);
     }
 
+    // virtualNode(tar) {
+    //     let virtualPoint = {dataX: this.nodes[0].x - 900, dataY: this.nodes[0].y, data: {E: 1000000}};
+    //     return chargeForce(virtualPoint, tar, this.quadTree.G);
+    // }
+
 }

@@ -115,11 +115,11 @@ export function getTree(tree) {
     return {edges: edges, datas: datas};
 }
 
-function getLen(num) {//	80*5/1300*5 是老师文件的合适参数
+export function getLen(num) {//	80*5/1300*5 是老师文件的合适参数
     return num * 80 * 5;	//	680		num * 460 * 0.3		num * 80 * 0.3
 }
 
-function getE(len) {
+export function getE(len) {
     return len * 1300 * 5;	//	100000		len * 700 * 0.3		len * 1300 * 0.3
 }
 
@@ -159,7 +159,7 @@ export function initTreeShape(tree, width=1000, height=600) {
 }
 
 //	初始化子节点的边的角度时，将角度基准转换为父边的角度, alpha 是父边角度，beta 是返回的子边基准角
-function fatherEdgeAngle(alpha) {
+export function fatherEdgeAngle(alpha) {
 	let PI = Math.PI;
 	//	先将 alpha 转换成 [0, 2pi] 的区间
 	let k = Math.floor(alpha / (2 * PI));

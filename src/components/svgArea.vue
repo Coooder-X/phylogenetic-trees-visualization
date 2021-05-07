@@ -6,6 +6,15 @@
             :dataObj="EditData.textData.dataObj"
             @closeEditText="closeEditText"
             @updateName="updateName"/>
+        <edit-tree 
+            :dialogFormVisible.sync="EditData.nodeData.editNodeDialogOpen"
+            :newNode="EditData.nodeData.newNode"
+            :newEdge="EditData.nodeData.newEdge"
+            :newData="EditData.nodeData.newData"
+            :currentNodeId="EditData.nodeData.currentNodeId"
+            :NodeCount="EditData.NodeCount"
+            @setEmpty="setEmpty"
+            @closeEditNode="closeEditNode"/>
     </div>
 </template>
 
@@ -13,11 +22,12 @@
 <script>
 import initSvg from "../svgMain.js";
 import EditText from './editText';
+import EditTree from './editTree';
 import bus from '../bus.js';
 
 export default {
     name: 'SvgArea',
-    components: {EditText},
+    components: {EditText, EditTree},
     props: {
         svgName: String,
         treeInfo: String
@@ -30,6 +40,11 @@ export default {
                     dataObj: {}
                 },
                 nodeData: {
+                    editNodeDialogOpen: false,
+                    currentNodeId: -1,
+                    newNode: {},    //  新增的节点
+                    newEdge: {},    //  新增的边
+                    newData: {},
                     nodeRadius: 5,
                     nodeColors: [],
                     strokeColors: []
@@ -38,7 +53,8 @@ export default {
                     lineWidth: 4,
                     lineColors: []
                 }
-            }
+            },
+            NodeCount: 0    //  总节点数
         };
     },
     created: function() {
@@ -84,8 +100,14 @@ export default {
         closeEditText() {
             this.EditData.textData.editTextDialogOpen = false;
         },
+        closeEditNode() {
+            this.EditData.nodeData.editNodeDialogOpen = false;
+        },
         updateName(name) {
             this.EditData.textData.dataObj.name = name;
+        },
+        setEmpty() {
+            this.EditData.nodeData.newNode = this.EditData.nodeData.newEdge = this.EditData.nodeData.newData = {};
         }
     }
 }

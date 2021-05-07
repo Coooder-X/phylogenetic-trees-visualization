@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="修改节点" :visible.sync="dialogFormVisible" :modal="true" :before-close="onBeforeClose">
+    <el-dialog title="修改节点名称" :visible.sync="dialogFormVisible" :modal="true" :before-close="onBeforeClose">
         <el-form :model="form">
             <el-form-item label="节点名称" :label-width="formLabelWidth">
             <el-input v-model="dataObj.name" autocomplete="off" @focus="initOldName"></el-input>

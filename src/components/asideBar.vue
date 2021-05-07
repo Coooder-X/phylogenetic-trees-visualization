@@ -27,7 +27,7 @@
                 </el-menu-item-group>
                 <el-menu-item-group title="分组2">
                     <el-submenu index="1-3">
-                    <template slot="title">调整树枝宽度{{treeStyle.lineWidth}}</template>
+                    <template slot="title">调整树枝宽度: {{treeStyle.lineWidth}}</template>
                     <el-menu-item index="1-3-1">
                         <div class="slider2">
                             <el-slider 
@@ -42,7 +42,7 @@
                 </el-submenu>
                 </el-menu-item-group>
                 <el-submenu index="1-4">
-                    <template slot="title">调整节点直径{{treeStyle.nodeRadius}}</template>
+                    <template slot="title">调整节点直径: {{treeStyle.nodeRadius}}</template>
                     <el-menu-item index="1-4-1">
                         <div class="slider2">
                             <el-slider 

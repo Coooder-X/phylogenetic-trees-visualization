@@ -51,7 +51,6 @@ export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布
 
 //  绘制所有连接节点的边
 export function paintAllLinks(nodes, edges, pad, EditData) {
-    console.log(EditData);
     for(let i = 0; i < edges.length; ++i) {
         let src = nodes[edges[i].source], tar = nodes[edges[i].target];
         svgLine(src, tar, pad, EditData.edgeData, EditData.edgeData.lineWidth, LenToNum(edges[i].length), i);
@@ -186,9 +185,10 @@ function svgPoint(x, y, pad, nodeData, idx) {    //  pad {oG: , oSvg: }
             startMovePoint(circle, 1.3, 1.0, nodeData);
             inNodeSelect = false;
         };
-        // circle.onmouseclick = function() {
-        //     // console.log("click");
-        // };
+        circle.onclick = function() {  //  传递的 nodeData 是对象引用，引用了svgArea.vue中的data，绑定修改，控制弹窗打开
+            nodeData.editNodeDialogOpen = true;
+            nodeData.currentNodeId = idx;   //  被点击的节点的 ID
+        };
     }
 }
 
