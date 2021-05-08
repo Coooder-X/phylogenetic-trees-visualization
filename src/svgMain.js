@@ -66,7 +66,7 @@ export default function(svgName, EditData, treeInfo) {
         //  由于quadTree的合法范围可能比视窗大很多，因此将nodes平移到视窗中心，存储在shiftedNodes中
         let shiftedNodes = positionShift(screenWidth, screenHeight, treeWidth, treeHeight, manyBody.nodes);
         paintAllLinks(shiftedNodes, manyBody.edges, pad_Link, EditData);
-        paintAllNodes(shiftedNodes, pad_Node, EditData);
+        paintAllNodes(shiftedNodes, manyBody.datas, pad_Node, EditData);
         paintAllTexts(shiftedNodes, manyBody.datas, G, notLeaf, noneNameNodeIdx, pad_Text, EditData);
         if(EditData.nodeData.newData.name != undefined) {
             let tmp = EditData.nodeData;

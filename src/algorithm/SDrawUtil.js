@@ -57,9 +57,9 @@ export function paintAllLinks(nodes, edges, pad, EditData) {
     }
 }
 //  绘制所有节点
-export function paintAllNodes(nodes, pad, EditData) {
+export function paintAllNodes(nodes, datas, pad, EditData) {
     nodes.forEach((node, idx) => {
-        svgPoint(node.x, node.y, pad, EditData.nodeData, idx);
+        svgPoint(node.x, node.y, pad, EditData.nodeData, idx, datas[idx], EditData.textData);
     });
 }
 //  绘制所有节点的文字
@@ -158,7 +158,7 @@ function svgLine(src, tar, pad, edgeData, width, len, idx) {
   封装svg绘制节点
   x,y 圆心坐标; pad为父标签集合; idx为该节点（节点或重心）索引（它们不在一个g标签内）
 */
-function svgPoint(x, y, pad, nodeData, idx) {    //  pad {oG: , oSvg: }
+function svgPoint(x, y, pad, nodeData, idx, datai, textData) {    //  pad {oG: , oSvg: }
     let color = nodeData.nodeColors[idx];
     let strokeColor = nodeData.strokeColors[idx];
     let radius = nodeData.nodeRadius;
@@ -188,6 +188,7 @@ function svgPoint(x, y, pad, nodeData, idx) {    //  pad {oG: , oSvg: }
         circle.onclick = function() {  //  传递的 nodeData 是对象引用，引用了svgArea.vue中的data，绑定修改，控制弹窗打开
             nodeData.editNodeDialogOpen = true;
             nodeData.currentNodeId = idx;   //  被点击的节点的 ID
+            textData.dataObj = datai;
         };
     }
 }

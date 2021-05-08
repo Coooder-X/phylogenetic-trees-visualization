@@ -11,8 +11,11 @@
             :newNode="EditData.nodeData.newNode"
             :newEdge="EditData.nodeData.newEdge"
             :newData="EditData.nodeData.newData"
+            :nodeColors="EditData.nodeData.nodeColors"
             :currentNodeId="EditData.nodeData.currentNodeId"
             :NodeCount="EditData.NodeCount"
+            @updateName="updateName"
+            @updateNodeColor="updateNodeColor"
             @setEmpty="setEmpty"
             @closeEditNode="closeEditNode"/>
     </div>
@@ -58,6 +61,11 @@ export default {
         };
     },
     created: function() {
+        if(this.EditData.nodeData.nodeColors.length == 0) {
+            for(let i = 0; i < 1000; ++i) {
+                this.EditData.nodeData.nodeColors.push('#000000');
+            }
+        }
         bus.$on('editNodeRadius', data => {
             this.EditData.nodeData.nodeRadius = data;
         });
@@ -108,6 +116,9 @@ export default {
         },
         updateName(name) {
             this.EditData.textData.dataObj.name = name;
+        },
+        updateNodeColor(idx, color) {
+            this.EditData.nodeData.nodeColors[idx] = color;
         },
         setEmpty() {
             this.EditData.nodeData.newNode = this.EditData.nodeData.newEdge = this.EditData.nodeData.newData = {};
