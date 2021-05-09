@@ -28,6 +28,12 @@
                             :predefine="predefineColors">
                         </el-color-picker>
                     </el-form-item>
+                    <el-form-item v-if="editModel" label="描边颜色" :label-width="formLabelWidth">
+                        <el-color-picker
+                            v-model="strokeColor"
+                            :predefine="predefineColors">
+                        </el-color-picker>
+                    </el-form-item>
                     <el-form-item v-if="!editModel" label="连边长度" :label-width="formLabelWidth">
                         <el-input v-model="edgeLen" autocomplete="off"></el-input>
                     </el-form-item>
@@ -54,11 +60,13 @@ export default {
         newNode: {},
         newEdge: {},
         newData: {},
-        nodeColors: Array
+        nodeColors: Array,
+        strokeColors: Array
     },
     data() {
         return {
             nodeColor: '#000000',
+            strokeColor: '#000000',
             formLabelWidth: '80px',
             nodeName: '',
             edgeLen: '',
@@ -80,6 +88,7 @@ export default {
         currentNodeId(newVal) { //  在鼠标点击一个 node 的时候，读取当前节点颜色，在编辑页面中显示
             if(this.nodeColors && this.nodeColors.length > newVal) {
                 this.nodeColor = this.nodeColors[Number(newVal)];
+                this.strokeColor = this.strokeColors[Number(newVal)];
             }
         }
     },
@@ -108,7 +117,7 @@ export default {
                 inValid = this.edgeLen === '' || !this.checkNumber(this.edgeLen) || this.edgeLen <= 0 || this.nodeName === '';
             }
             if(inValid) {
-                    ElementUI.Notification({
+                ElementUI.Notification({
                     title: 'Invalid',
                     message: '输入内容不合法',
                     type: 'error',
@@ -125,11 +134,15 @@ export default {
                     this.$emit('updateName', this.nodeName);
                 }
                 this.updateNodeColor();
+                this.updateStrokeColor();
             }
             this.changeVisible();
         },
         updateNodeColor() {
             this.$emit('updateNodeColor', this.currentNodeId, this.nodeColor);
+        },
+        updateStrokeColor() {
+            this.$emit('updateStrokeColor', this.currentNodeId, this.strokeColor);
         },
         checkNumber(num) {
             var reg = /^[0-9]+.?[0-9]*$/;

@@ -12,10 +12,12 @@
             :newEdge="EditData.nodeData.newEdge"
             :newData="EditData.nodeData.newData"
             :nodeColors="EditData.nodeData.nodeColors"
+            :strokeColors="EditData.nodeData.strokeColors"
             :currentNodeId="EditData.nodeData.currentNodeId"
             :NodeCount="EditData.NodeCount"
             @updateName="updateName"
             @updateNodeColor="updateNodeColor"
+            @updateStrokeColor="updateStrokeColor"
             @setEmpty="setEmpty"
             @closeEditNode="closeEditNode"/>
     </div>
@@ -64,6 +66,7 @@ export default {
         if(this.EditData.nodeData.nodeColors.length == 0) {
             for(let i = 0; i < 1000; ++i) {
                 this.EditData.nodeData.nodeColors.push('#000000');
+                this.EditData.nodeData.strokeColors.push('#000000');
             }
         }
         bus.$on('editNodeRadius', data => {
@@ -119,6 +122,9 @@ export default {
         },
         updateNodeColor(idx, color) {
             this.EditData.nodeData.nodeColors[idx] = color;
+        },
+        updateStrokeColor(idx, color) {
+            this.EditData.nodeData.strokeColors[idx] = color;
         },
         setEmpty() {
             this.EditData.nodeData.newNode = this.EditData.nodeData.newEdge = this.EditData.nodeData.newData = {};
