@@ -53,7 +53,7 @@ export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布
 export function paintAllLinks(nodes, edges, pad, EditData) {
     for(let i = 0; i < edges.length; ++i) {
         let src = nodes[edges[i].source], tar = nodes[edges[i].target];
-        svgLine(src, tar, pad, EditData.edgeData, EditData.edgeData.lineWidth, LenToNum(edges[i].length), i);
+        svgLine(src, tar, edges, pad, EditData.edgeData, EditData.edgeData.lineWidth, LenToNum(edges[i].length), i);
     }
 }
 //  绘制所有节点
@@ -124,7 +124,7 @@ export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad, EditData
 // }
 
 //  封装svg绘制直线
-function svgLine(src, tar, pad, edgeData, width, len, idx) {
+function svgLine(src, tar, edges, pad, edgeData, width, len, idx) {
     let color = edgeData.lineColors[idx];
     let line = pad.oG.getElementsByTagName('line')[idx];
     if(line != undefined) {
@@ -146,10 +146,15 @@ function svgLine(src, tar, pad, edgeData, width, len, idx) {
         line.onmouseenter = function() {
             inEdgeSelect = true;
             startMoveLine(line, 1.0, 1.5, edgeData);  //  选中动画特效
-        }
+        };
         line.onmouseleave = function() {
             startMoveLine(line, 1.5, 1.0, edgeData);  //  选中动画特效
             inEdgeSelect = false;
+        };
+        line.onclick = function() {   //  修改 edge 的颜色、长度
+            edgeData.editEdgeDialogOpen = true;
+            edgeData.newEdge = edges[idx];
+            edgeData.currentEdgeId = idx;
         };
     }
 }
@@ -180,7 +185,7 @@ function svgPoint(x, y, pad, nodeData, idx, datai, textData) {    //  pad {oG: ,
         circle.onmouseenter = function() {
             inNodeSelect = true;
             startMovePoint(circle, 1.0, 1.3, nodeData); //this是g标签 要找到圆 起始值为半径40 目标变成30
-        }
+        };
         circle.onmouseleave = function() {
             startMovePoint(circle, 1.3, 1.0, nodeData);
             inNodeSelect = false;

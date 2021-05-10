@@ -87,6 +87,12 @@ export default function(svgName, EditData, treeInfo) {
             record = 0;
             // iter();
             paintAmimation();
+        } else if(EditData.edgeData.isEditing == true) {    //  修改边
+            EditData.edgeData.isEditing = false;
+            pairName = choose(edges, datas), pair = []; //  修改边长后，重新迭代
+            record = 0;
+            // iter();
+            paintAmimation();
         }
     }, 10);
 

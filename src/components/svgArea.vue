@@ -20,6 +20,15 @@
             @updateStrokeColor="updateStrokeColor"
             @setEmpty="setEmpty"
             @closeEditNode="closeEditNode"/>
+        <edit-edge
+            :dialogFormVisible.sync="EditData.edgeData.editEdgeDialogOpen"
+            :edgeColors="EditData.edgeData.lineColors"
+            :newEdge="EditData.edgeData.newEdge"
+            :currentEdgeId="EditData.edgeData.currentEdgeId"
+            @updateEdgeLen="updateEdgeLen"
+            @updateEdgeColor="updateEdgeColor"
+            @closeEditEdge="closeEditEdge"
+            @setEmpty="setEmpty"/>
     </div>
 </template>
 
@@ -28,11 +37,12 @@
 import initSvg from "../svgMain.js";
 import EditText from './editText';
 import EditTree from './editTree';
+import EditEdge from './editEdge';
 import bus from '../bus.js';
 
 export default {
     name: 'SvgArea',
-    components: {EditText, EditTree},
+    components: {EditText, EditTree, EditEdge},
     props: {
         svgName: String,
         treeInfo: String
@@ -55,6 +65,10 @@ export default {
                     strokeColors: []
                 },
                 edgeData: {
+                    editEdgeDialogOpen: false,
+                    currentEdgeId: -1,
+                    newEdge: {},    //  修改的边
+                    isEditing: false,
                     lineWidth: 4,
                     lineColors: []
                 }
@@ -67,6 +81,7 @@ export default {
             for(let i = 0; i < 1000; ++i) {
                 this.EditData.nodeData.nodeColors.push('#000000');
                 this.EditData.nodeData.strokeColors.push('#000000');
+                this.EditData.edgeData.lineColors.push('#DAB1D5');
             }
         }
         bus.$on('editNodeRadius', data => {
@@ -117,6 +132,9 @@ export default {
         closeEditNode() {
             this.EditData.nodeData.editNodeDialogOpen = false;
         },
+        closeEditEdge() {
+            this.EditData.edgeData.editEdgeDialogOpen = false;
+        },
         updateName(name) {
             this.EditData.textData.dataObj.name = name;
         },
@@ -126,8 +144,16 @@ export default {
         updateStrokeColor(idx, color) {
             this.EditData.nodeData.strokeColors[idx] = color;
         },
+        updateEdgeLen(len) {
+            this.EditData.edgeData.newEdge.length = len;
+            this.EditData.edgeData.isEditing = true;
+        },
+        updateEdgeColor(idx, color) {
+            this.EditData.edgeData.lineColors[idx] = color;
+        },
         setEmpty() {
-            this.EditData.nodeData.newNode = this.EditData.nodeData.newEdge = this.EditData.nodeData.newData = {};
+            this.EditData.nodeData.newNode = this.EditData.nodeData.newEdge = 
+                this.EditData.nodeData.newData = this.EditData.edgeData.newEdge = {};
         }
     }
 }
