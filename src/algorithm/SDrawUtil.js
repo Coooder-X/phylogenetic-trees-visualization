@@ -215,10 +215,10 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, datai, idx, textDa
         pad.oG.appendChild(oText);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         oText.onmouseenter = function() {
-            startMoveText(oText, 1.3 * fontSize, fontSize);
+            startMoveText(oText, 1.2 * fontSize, fontSize);
         };
         oText.onmouseleave = function() {
-            startMoveText(oText, fontSize, 1.3 * fontSize);
+            startMoveText(oText, fontSize, 1.2 * fontSize);
         };
     }
     oText.setAttribute("text-anchor", "start"); //  text-anchor="start"时，(x,y)为<text>的起始坐标
