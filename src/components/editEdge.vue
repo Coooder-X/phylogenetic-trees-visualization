@@ -3,7 +3,7 @@
         <el-card shadow="never">
             <el-form>
                 <el-form-item label="连边长度" :label-width="formLabelWidth">
-                    <el-input v-model="obj.length" autocomplete="off"></el-input>
+                    <el-input v-model="obj.originLen" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-row>
                     <el-col :span="9">
@@ -40,11 +40,8 @@ export default {
         newEdge(val, oldVal) {
             if(JSON.stringify(val) !== "{}" && JSON.stringify(oldVal) === "{}") {
                 this.obj = JSON.parse(JSON.stringify(val));
-                if(this.obj.length) {
-                    this.obj.length = LenToNum(this.obj.length);
-                }
             } else {
-                this.obj.length = '';
+                this.obj.originLen = '';
             }
         },
         currentEdgeId(newVal) { //  在鼠标点击一个 edge 的时候，读取当前颜色，在编辑页面中显示
@@ -88,7 +85,7 @@ export default {
             this.changeVisible();
         },
         ConfirmChangeData() {   //  this.newNode 没有用到，新增节点的初始化在 svgMain 中完成
-            if(this.obj.length === '' || !this.checkNumber(this.obj.length) || this.obj.length <= 0) {
+            if(this.obj.originLen === '' || !this.checkNumber(this.obj.originLen) || this.obj.originLen <= 0) {
                 ElementUI.Notification({
                     title: 'Invalid',
                     message: '边长不合法',
@@ -97,7 +94,7 @@ export default {
                 });
                 return;
             }
-            if(this.obj.length != this.newEdge.length) {
+            if(this.obj.originLen != this.newEdge.originLen) {
                 this.updateEdgeLen();
             }   //  updateEdgeLen 中更改了 isEditing 的布尔变量，只有在 isEditing 为真时才重新迭代，只更改颜色则不迭代
             this.updateEdgeColor();
@@ -105,7 +102,7 @@ export default {
             this.$emit("setEmpty");
         },
         updateEdgeLen() {
-            this.$emit('updateEdgeLen', getLen(this.obj.length));
+            this.$emit('updateEdgeLen', getLen(this.obj.originLen));
         },
         updateEdgeColor() {
             this.$emit('updateEdgeColor', this.currentEdgeId, this.edgeColor);

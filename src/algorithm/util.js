@@ -98,13 +98,14 @@ export function getTree(tree) {
                 let child = now.node.children[i];
                 if(child.children != undefined) {
                     idx++;
-                    edges.push({source: now.idx, target: idx, length: getLen(child.branch_length)});
+                    edges.push({source: now.idx, target: idx, length: getLen(child.branch_length), originLen: child.branch_length});
                     datas.push({name: child.name, E: getE(child.branch_length)});
                     que.push({node: child, idx: idx});
                 }
                 else {  //  孩子是叶子节点
                     idx++;
-                    edges.push({source: now.idx, target: idx, length: getLen(child.branch_length)});
+					//	edge 增加一个属性，originLen，值为文件中的原有边长，length 作为转换成像素单位的长度
+                    edges.push({source: now.idx, target: idx, length: getLen(child.branch_length), originLen: child.branch_length});
                     datas.push({name: child.name, E: getE(child.branch_length)});
                 }
 				avgE += datas[datas.length-1].E;

@@ -39,6 +39,7 @@ import EditText from './editText';
 import EditTree from './editTree';
 import EditEdge from './editEdge';
 import bus from '../bus.js';
+import { getLen } from '../algorithm/util.js';
 
 export default {
     name: 'SvgArea',
@@ -145,7 +146,8 @@ export default {
             this.EditData.nodeData.strokeColors[idx] = color;
         },
         updateEdgeLen(len) {
-            this.EditData.edgeData.newEdge.length = len;
+            this.EditData.edgeData.newEdge.originLen = len;
+            this.EditData.edgeData.newEdge.length = getLen(len);
             this.EditData.edgeData.isEditing = true;
         },
         updateEdgeColor(idx, color) {

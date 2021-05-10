@@ -126,9 +126,9 @@ export default {
                 return;
             }
             if(this.editModel === 0) {  //  添加节点模式
-                this.newEdge.length = this.edgeLen;
-                this.newData.name = this.nodeName, this.newData.E = getE(this.newEdge.length);
-                this.newEdge.source = this.currentNodeId, this.newEdge.target = this.NodeCount, this.newEdge.length = getLen(this.newEdge.length);
+                this.newEdge.originLen = this.edgeLen;
+                this.newData.name = this.nodeName, this.newData.E = getE(this.newEdge.originLen);
+                this.newEdge.source = this.currentNodeId, this.newEdge.target = this.NodeCount, this.newEdge.length = getLen(this.newEdge.originLen);
             } else {    //  编辑节点模式可以修改 节点名称，以及改变颜色
                 if(this.nodeName.length > 0) {
                     this.$emit('updateName', this.nodeName);

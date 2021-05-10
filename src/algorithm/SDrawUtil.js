@@ -53,7 +53,7 @@ export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布
 export function paintAllLinks(nodes, edges, pad, EditData) {
     for(let i = 0; i < edges.length; ++i) {
         let src = nodes[edges[i].source], tar = nodes[edges[i].target];
-        svgLine(src, tar, edges, pad, EditData.edgeData, EditData.edgeData.lineWidth, LenToNum(edges[i].length), i);
+        svgLine(src, tar, edges, pad, EditData.edgeData, EditData.edgeData.lineWidth, edges[i].originLen/*LenToNum(edges[i].length)*/, i);
     }
 }
 //  绘制所有节点
