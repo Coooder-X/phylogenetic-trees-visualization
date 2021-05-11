@@ -64,10 +64,13 @@ export default {
         this.hasInput[index] = true;
         this.$forceUpdate();
       },
-      loadTreeInfo(svgName, treeInfo) { //  设置对应的 nwk 文本
+      loadTreeInfo(svgName, treeInfo, fileName) { //  设置对应的 nwk 文本
         this.editableTabs.forEach((tab, index) => {
           if (tab.title === svgName) {
             this.treeInfo[index] = treeInfo;
+			if(fileName != undefined) {
+				tab.title = fileName;	//	若是文件导入，则把 tab.title 改为文件名
+			}
           }
         });
       },

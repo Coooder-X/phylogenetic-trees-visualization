@@ -165,6 +165,9 @@ export default {
         downLoadFile(fileName, content) {
             var aTag = document.createElement('a'); //  a 标签的下载文件功能
             var blob = new Blob([content]);
+            if(fileName.indexOf('.') != -1) {   //  去掉原有的文件后缀名
+                fileName = fileName.substring(0, fileName.indexOf('.'));
+            }
             aTag.download = fileName + '.nwk';  //  保存为 nwk 格式
             aTag.href = URL.createObjectURL(blob);
             aTag.click();   //  模拟点击 a 标签

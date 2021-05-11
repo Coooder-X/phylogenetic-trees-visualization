@@ -124,7 +124,7 @@ export default {
                             });
                             return;
                         }
-                        this.$emit('loadTreeInfo', this.svgName, this.textarea);
+                        this.$emit('loadTreeInfo', this.svgName, this.textarea, file.raw.name);
                         this.$emit('statusChange');
                         bus.$emit('sliderDisabled', false);
                     }
