@@ -57,8 +57,8 @@ export function createGraph(edges) {   //  根据edges建立图邻接表
     for(let i = 0; i < edges.length + 1; ++i)
         G.push(new Array());
     for(let i = 0; i < edges.length; ++i) {
-        G[edges[i].source].push({pos: edges[i].target, len: edges[i].length});
-        G[edges[i].target].push({pos: edges[i].source, len: edges[i].length});
+        G[edges[i].source].push({pos: edges[i].target, originLen: edges[i].originLen, len: edges[i].length});
+        G[edges[i].target].push({pos: edges[i].source, originLen: edges[i].originLen, len: edges[i].length});
     }
     return G;
 }

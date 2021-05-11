@@ -39,7 +39,7 @@ import EditText from './editText';
 import EditTree from './editTree';
 import EditEdge from './editEdge';
 import bus from '../bus.js';
-import { getLen } from '../algorithm/util.js';
+import { getLen, treeToJson, json2nwk } from '../algorithm/util.js';
 
 export default {
     name: 'SvgArea',
@@ -50,6 +50,7 @@ export default {
     },
     data() {
         return {
+            saveInfo: {},
             EditData: { //  专门传递编辑的数据的对象，用于传引用给 SDraw 对 svg 进行编辑
                 textData: { //  修改节点名称的数据块
                     editTextDialogOpen: false,
@@ -123,7 +124,7 @@ export default {
         });
         this.$nextTick(() => {
             //  每个 svg 实例都有一个唯一的名字（等于对应tab的content），以便根据 id 操作 DOM 树
-            initSvg(this.svgName, this.EditData, this.treeInfo);
+            initSvg(this.svgName, this.EditData, this.treeInfo, this.saveInfo);
         });
     },
     methods: {
@@ -156,6 +157,9 @@ export default {
         setEmpty() {
             this.EditData.nodeData.newNode = this.EditData.nodeData.newEdge = 
                 this.EditData.nodeData.newData = this.EditData.edgeData.newEdge = {};
+        },
+        getFileContent() {  //  返回当前树解析成的 nwk 格式文本内容
+            return json2nwk(treeToJson(this.saveInfo.datas, this.saveInfo.notLeaf, this.saveInfo.G));
         }
     }
 }

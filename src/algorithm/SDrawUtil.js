@@ -53,7 +53,7 @@ export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布
 export function paintAllLinks(nodes, edges, pad, EditData) {
     for(let i = 0; i < edges.length; ++i) {
         let src = nodes[edges[i].source], tar = nodes[edges[i].target];
-        svgLine(src, tar, edges, pad, EditData.edgeData, EditData.edgeData.lineWidth, edges[i].originLen/*LenToNum(edges[i].length)*/, i);
+        svgLine(src, tar, edges, pad, EditData.edgeData, EditData.edgeData.lineWidth, edges[i].originLen, i);
     }
 }
 //  绘制所有节点
@@ -127,6 +127,7 @@ export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad, EditData
 function svgLine(src, tar, edges, pad, edgeData, width, len, idx) {
     let color = edgeData.lineColors[idx];
     let line = pad.oG.getElementsByTagName('line')[idx];
+    let tooltip = line == undefined? undefined : line.getElementsByTagName('title');
     if(line != undefined) {
         line.setAttribute('x1', src.x);
         line.setAttribute('y1', src.y);
@@ -135,10 +136,11 @@ function svgLine(src, tar, edges, pad, edgeData, width, len, idx) {
         line.setAttribute('stroke', color == null? '#DAB1D5' : color);
         if(inEdgeSelect == false)
             line.setAttribute('stroke-width', edgeData.lineWidth);
+        tooltip.innerHTML = len;    //  这里设置没反应，是 bug
     }
     else {
         line = createShape('line', {'x1':src.x, 'y1':src.y, 'x2':tar.x, 'y2':tar.y, 'stroke':'#DAB1D5', 'stroke-width':width});
-        let tooltip = createShape('title');
+        tooltip = createShape('title');
         tooltip.innerHTML = len;
         line.appendChild(tooltip);
         pad.oG.appendChild(line);  //添加到oG

@@ -102,7 +102,7 @@ export default {
             this.$emit("setEmpty");
         },
         updateEdgeLen() {
-            this.$emit('updateEdgeLen', getLen(this.obj.originLen));
+            this.$emit('updateEdgeLen', this.obj.originLen);
         },
         updateEdgeColor() {
             this.$emit('updateEdgeColor', this.currentEdgeId, this.edgeColor);

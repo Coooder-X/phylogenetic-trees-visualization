@@ -4,7 +4,7 @@ import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf, fatherEd
 import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
-export default function(svgName, EditData, treeInfo) {
+export default function(svgName, EditData, treeInfo, saveInfo) {
     var svgNS = 'http://www.w3.org/2000/svg';   //命名空间
     var oParent = document.getElementById(svgName);   //获取父节点 才能添加到页面中
     // var centerX = oParent.offsetWidth/2;   //中心点横坐标
@@ -55,6 +55,10 @@ export default function(svgName, EditData, treeInfo) {
     manyBody.nodes = nodes, manyBody.datas = datas, manyBody.edges = edges;
     manyBody.buildTree();
     EditData.NodeCount = manyBody.nodes.length;
+    //  导出编辑后的 nwk 文件时，需要的参数，通过引用传回给 svgArea.vue
+    saveInfo.notLeaf = notLeaf;
+    saveInfo.G = G;
+    saveInfo.datas = manyBody.datas;
     
     var pairName = choose(edges, datas), pair = [];
     var record = 0;
@@ -75,21 +79,24 @@ export default function(svgName, EditData, treeInfo) {
             let fatherNode = manyBody.nodes[tmp.newEdge.source];
             let randomAngle = fatherEdgeAngle(0);
             let newNode = {x: fatherNode.x + Math.cos(randomAngle) * tmp.newEdge.length, y: fatherNode.y + Math.sin(randomAngle) * tmp.newEdge.length};
-            let newEdge = {source: tmp.newEdge.source, target: tmp.newEdge.target, length: tmp.newEdge.length};
+            let newEdge = {source: tmp.newEdge.source, target: tmp.newEdge.target, length: tmp.newEdge.length, originLen: tmp.newEdge.originLen};
             manyBody.nodes.push(newNode);
             manyBody.edges.push(newEdge);
             manyBody.datas.push(newData);
             tmp.newNode = tmp.newEdge = tmp.newData = {};
             EditData.NodeCount = manyBody.nodes.length;
-            G = createGraph(edges);
+            G = createGraph(manyBody.edges);
+            saveInfo.G = G, saveInfo.datas = manyBody.datas;
 
-            pairName = choose(edges, datas), pair = []; //  添加节点后，重新迭代
+            pairName = choose(manyBody.edges, manyBody.datas), pair = []; //  添加节点后，重新迭代
             record = 0;
             // iter();
             paintAmimation();
         } else if(EditData.edgeData.isEditing == true) {    //  修改边
             EditData.edgeData.isEditing = false;
-            pairName = choose(edges, datas), pair = []; //  修改边长后，重新迭代
+            G = createGraph(manyBody.edges);
+            saveInfo.G = G, saveInfo.datas = manyBody.datas;
+            pairName = choose(manyBody.edges, manyBody.datas), pair = []; //  修改边长后，重新迭代
             record = 0;
             // iter();
             paintAmimation();

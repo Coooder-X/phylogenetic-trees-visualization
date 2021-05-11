@@ -8,8 +8,8 @@
             <nwk-input v-if="!hasInput[index]" 
               @statusChange="statusChange(index)" 
               @loadTreeInfo="loadTreeInfo"
-              :svgName="item.content"></nwk-input>
-            <svg-area v-else :svgName="item.content" :treeInfo="treeInfo[index]"></svg-area>
+              :svgName="item.title"></nwk-input>
+            <svg-area v-else :svgName="item.title" :treeInfo="treeInfo[index]" ref="svgFile"></svg-area>
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -17,6 +17,7 @@
 <script>
 import NwkInput from "./nwkInput.vue";
 import SvgArea from './svgArea.vue';
+import bus from "../bus.js";
 
 export default {
     components: { NwkInput, SvgArea },
@@ -38,6 +39,26 @@ export default {
         tabIndex: 2
       }
     },
+	mounted() {
+		bus.$on('getFile', data => {	//	asideBar 组件发来需要保存文件的请求，此处返回文件名和内容
+			data.fileName = this.editableTabs[Number(this.editableTabsValue)-1].title;
+			console.log(this.$refs);
+			this.$nextTick(() => {
+				let idx = -1;
+				if(this.$refs && this.$refs.svgFile) {	//	找到对应的 svg，以便获取树信息，反解析成 nwk 格式
+					for(let i = 0; i < this.$refs.svgFile.length; ++i) {
+						if(this.$refs.svgFile[i].svgName == data.fileName) {
+							idx = i;
+							break;
+						}
+					}
+				}
+				if(idx != -1) {
+					data.content = this.$refs.svgFile[idx].getFileContent();
+				}
+			});
+		});
+	},
     methods: {
       statusChange(index) {
         this.hasInput[index] = true;
@@ -45,7 +66,7 @@ export default {
       },
       loadTreeInfo(svgName, treeInfo) { //  设置对应的 nwk 文本
         this.editableTabs.forEach((tab, index) => {
-          if (tab.content === svgName) {
+          if (tab.title === svgName) {
             this.treeInfo[index] = treeInfo;
           }
         });
@@ -70,8 +91,10 @@ export default {
               if (tab.name === targetName) {
                 removeIdx = index;
                 this.treeInfo.push('');
-                var list = document.getElementById(tab.content);
-                list.removeChild(list.childNodes[0]); //  删除对应的 svg 实例
+                var list = document.getElementById(tab.title);	//	svg 的id 为 tab 的 title
+				if(list) {
+                	list.removeChild(list.childNodes[0]); //  删除对应的 svg 实例
+				}
                 let nextTab = tabs[index + 1] || tabs[index - 1];
                 if (nextTab) {
                   activeName = nextTab.name;

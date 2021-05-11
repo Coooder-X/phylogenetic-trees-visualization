@@ -62,7 +62,12 @@ export function json2nwk(json) {
 			});
 			var substring = children.join();
 			if(nest.hasOwnProperty('name')) {
-				subtree = "("+substring+")" + nest.name;
+				if(substring != '') {
+					subtree = "("+substring+")" + nest.name;
+				}
+				else {
+					subtree = nest.name;
+				}
 			}
 			if(nest.hasOwnProperty('branch_length')) {
 				subtree = subtree + ":"+nest.branch_length;
@@ -114,6 +119,37 @@ export function getTree(tree) {
     }
 	datas[0].E = avgE / (datas.length - 1);
     return {edges: edges, datas: datas};
+}
+
+export function treeToJson(datas, notLeaf, G) {	//	根据当前树的信息，转换为 json 对象
+	let rootName = datas[0].name;
+	if(notLeaf.has(0)) {	//	根节点不是叶子，则忽略名字
+		rootName = '';
+	}
+	let vis = [];
+	for(let i = 0; i < datas.length; ++i)
+		vis.push(0);
+	let que = new Array(), IdQue = new Array(), now = {name: rootName, children: []}, curId = 0;
+	que.push(now);
+	IdQue.push(0);
+	let treeJson = now;
+	while(que.length) {
+		now = que[0], curId = IdQue[0];
+		que.shift(), IdQue.shift();
+		vis[curId] = 1;
+		if(G[curId].length > 0) {
+			for(let i = 0; i < G[curId].length; ++i) {
+				if(vis[G[curId][i].pos] == 1)
+					continue;
+				let name = notLeaf.has(G[curId][i].pos) ? '' : datas[G[curId][i].pos].name;	//	不是叶子，则忽略名字
+				let child = {name: name, branch_length: G[curId][i].originLen, children: []};
+				now.children.push(child);
+				que.push(child);
+				IdQue.push(G[curId][i].pos);
+			}
+		}
+	}
+	return treeJson;
 }
 
 export function getLen(num) {//	80*5/1300*5 是老师文件的合适参数
