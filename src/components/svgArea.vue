@@ -85,6 +85,7 @@ export default {
                 this.EditData.nodeData.strokeColors.push('#000000');
                 this.EditData.edgeData.lineColors.push('#DAB1D5');
             }
+            this.EditData.nodeData.nodeColors[0] = 'red';
         }
         bus.$on('editNodeRadius', data => {
             this.EditData.nodeData.nodeRadius = data;
