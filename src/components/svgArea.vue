@@ -110,8 +110,9 @@ export default {
                     this.EditData.nodeData.strokeColors[i] = data;
             }
         });
-        bus.$on('editBackgroundColor', data => {
+        bus.$on('editBackgroundColor', data => {    //  svg 画布和视窗背景色都要改，svg 画布的颜色初始化在 svgMain 中
             document.getElementById(this.svgName).style.backgroundColor = data;
+            document.getElementById(this.svgName).childNodes[0].style.backgroundColor = data;
         });
         bus.$on('editAllEdgeColor', data => {
             if(this.EditData.edgeData.lineColors.length == 0) {

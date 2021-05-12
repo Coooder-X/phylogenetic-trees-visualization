@@ -27,7 +27,10 @@
                         </el-button>
                     </el-menu-item>
                     <el-menu-item index="1-2">
-                        <el-button type="warning" size="small" :disabled="treeStyle.sliderDisabled">
+                        <el-button type="warning" 
+                            size="small" 
+                            :disabled="treeStyle.sliderDisabled"
+                            @click="saveImage">
                             保存为图片
                         </el-button>
                     </el-menu-item>
@@ -161,6 +164,9 @@ export default {
             this.$nextTick(() => {
                 this.downLoadFile(file.fileName, file.content);
             });
+        },
+        saveImage() {
+            bus.$emit('getSvgImage');
         },
         downLoadFile(fileName, content) {
             var aTag = document.createElement('a'); //  a 标签的下载文件功能

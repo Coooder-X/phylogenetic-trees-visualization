@@ -41,7 +41,8 @@ export default {
     },
 	mounted() {
 		bus.$on('getFile', data => {	//	asideBar 组件发来需要保存文件的请求，此处返回文件名和内容
-			data.fileName = this.editableTabs[Number(this.editableTabsValue)-1].title;
+			let tab = this.getNowTab();
+			data.fileName = tab.title;
 			console.log(this.$refs);
 			this.$nextTick(() => {
 				let idx = -1;
@@ -58,8 +59,42 @@ export default {
 				}
 			});
 		});
+		/*
+         * 将svg导出成图片
+         */
+        bus.$on('getSvgImage', () => {
+			this.$nextTick(() => {
+				let tab = this.getNowTab();
+				let name = tab.title;
+				let node = document.getElementById(name).childNodes[0];
+				let svgXml = new XMLSerializer().serializeToString(node);	//	svg 的 xml 格式字符串
+				let image = new Image();
+				image.src = 'data:image/svg+xml;base64,' + window.btoa(svgXml);	//	base64 编码
+				image.onload = function() {
+					var canvas = document.createElement('canvas');  //准备空画布
+					canvas.width = node.getAttribute('width');
+					canvas.height = node.getAttribute('height');
+
+					var context = canvas.getContext('2d');  //取得画布的2d绘图上下文
+					context.drawImage(image, 0, 0);
+					
+					var a = document.createElement('a');
+					a.href = canvas.toDataURL('image/png', 1.0);  //将画布内的信息导出为png图片数据
+					a.download = name;  //设定下载名称
+					a.click(); //点击触发下载
+				}
+			});
+            
+        });
 	},
     methods: {
+		getNowTab() {	//	获取当前正在编辑的 tab 对象
+			for(let i = 0; i < this.editableTabs.length; ++i) {
+				if(this.editableTabs[i].name == this.editableTabsValue) {
+					return this.editableTabs[i];
+				}
+			}
+		},
       statusChange(index) {
         this.hasInput[index] = true;
         this.$forceUpdate();

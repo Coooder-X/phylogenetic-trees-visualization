@@ -14,6 +14,7 @@ export default function(svgName, EditData, treeInfo, saveInfo) {
     var oG_Line = createShape('g', {'style':'cursor:pointer', 'class':'lineStyle'});
     var oG_Text = createShape('g', {'style':'cursor:pointer', 'class':'textStyle'});
     var oSvg = createShape('svg', {'xmlns':svgNS, 'width':oParent.offsetWidth, 'height':oParent.offsetHeight });
+    oSvg.style.backgroundColor = 'rgba(250, 235, 215, 0.56)';   // 导出图片需要的背景色初始化
 
     //  控制 svg 缩放移动的变量，为使多个 tab 分离，不在 Draw.js 中使用全局变量，而是每个实例单独一份
     let svgOptionVariables = {   
