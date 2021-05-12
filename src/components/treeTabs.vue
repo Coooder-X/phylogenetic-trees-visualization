@@ -66,7 +66,9 @@ export default {
 			this.$nextTick(() => {
 				let tab = this.getNowTab();
 				let name = tab.title;
-				let node = document.getElementById(name).childNodes[0];
+				let node0 = document.getElementById(name).childNodes[0];
+				let node = node0.cloneNode(true);	//	复制一份 dom 节点，以便修改使得 svg 处于视窗中心
+				node.setAttribute('transform', 'translate(' + 0 + ',' + 0 + '), scale(1.2)');
 				let svgXml = new XMLSerializer().serializeToString(node);	//	svg 的 xml 格式字符串
 				let image = new Image();
 				image.src = 'data:image/svg+xml;base64,' + window.btoa(svgXml);	//	base64 编码
