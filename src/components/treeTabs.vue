@@ -66,9 +66,6 @@ export default {
 			this.$nextTick(() => {
 				let tab = this.getNowTab();
 				let name = tab.title;
-				if(name.indexOf('.') != -1) {   //  去掉原有的文件后缀名
-					name = name.substring(0, name.indexOf('.'));
-				}
 				let node0 = document.getElementById(name).childNodes[0];
 				let node = node0.cloneNode(true);	//	复制一份 dom 节点，以便修改使得 svg 处于视窗中心
 				node.setAttribute('transform', 'translate(' + 0 + ',' + 0 + '), scale(1.2)');
@@ -85,6 +82,9 @@ export default {
 					
 					var a = document.createElement('a');
 					a.href = canvas.toDataURL('image/png', 1.0);  //将画布内的信息导出为png图片数据
+          if(name.indexOf('.') != -1) {   //  去掉原有的文件后缀名
+            name = name.substring(0, name.indexOf('.'));
+          }
 					a.download = name;  //设定下载名称
 					a.click(); //点击触发下载
 				}
