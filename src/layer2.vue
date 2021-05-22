@@ -1,7 +1,8 @@
 <template>
     <el-container>
         <el-header height="50px">
-            <header-bar></header-bar>
+            <!-- <header-bar></header-bar> -->
+            <img class="logo" src='./assets/weblogo3.png'>
         </el-header>
         <el-container>
             <aside-bar></aside-bar>
@@ -31,6 +32,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+        // margin-left: -1080px;
+        // height: 50px;
+        // width: 310px;
+        margin-left: -990px;
+        margin-top: 7px;
+        height: 37px;
+        width: 350px;
+    }
+
 /deep/ .el-header{
     padding: 0%;
     background-color: #336699;

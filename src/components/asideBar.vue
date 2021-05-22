@@ -14,10 +14,10 @@
             <el-submenu index="1">
                 <template slot="title">
                     <i class="el-icon-menu"></i>
-                    <span>导航一</span>
+                    <span>工具栏</span>
                 </template>
                 <el-menu-item-group>
-                    <template slot="title">分组一</template>
+                    <template slot="title">导出</template>
                     <el-menu-item index="1-1">
                         <el-button type="primary" 
                             size="small" 
@@ -35,7 +35,7 @@
                         </el-button>
                     </el-menu-item>
                 </el-menu-item-group>
-                <el-menu-item-group title="分组2">
+                <el-menu-item-group title="样式">
                     <el-submenu index="1-3">
                     <template slot="title">调整树枝宽度: {{treeStyle.lineWidth}}</template>
                     <el-menu-item index="1-3-1">
