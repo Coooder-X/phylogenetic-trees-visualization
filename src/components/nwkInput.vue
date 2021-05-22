@@ -124,6 +124,15 @@ export default {
                             });
                             return;
                         }
+                        if(document.getElementById(file.raw.name) != null) {
+                            ElementUI.Notification({
+                                title: 'Error',
+                                message: '当前项目已存在当前文件！',
+                                type: 'error',
+                                position: 'top-right',
+                            });
+                            return;
+                        }
                         this.$emit('loadTreeInfo', this.svgName, this.textarea, file.raw.name);
                         this.$emit('statusChange');
                         bus.$emit('sliderDisabled', false);
