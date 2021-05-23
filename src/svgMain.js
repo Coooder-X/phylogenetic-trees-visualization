@@ -65,10 +65,10 @@ export default function(svgName, EditData, treeInfo, saveInfo) {
     var pairName = choose(edges, datas), pair = [];
     var record = 0;
 
-    iter();
+    // iter();
     
     setInterval(function(){
-        // paintAmimation();
+        paintAmimation();
         //  由于quadTree的合法范围可能比视窗大很多，因此将nodes平移到视窗中心，存储在shiftedNodes中
         let shiftedNodes = positionShift(screenWidth, screenHeight, treeWidth, treeHeight, manyBody.nodes);
         paintAllLinks(shiftedNodes, manyBody.edges, pad_Link, EditData);

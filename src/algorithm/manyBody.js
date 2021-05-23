@@ -59,7 +59,7 @@ export default class ManyBody {
             let F = this.k * Math.pow(Math.abs(dis - this.edges[i].length), 1);
             let avgE = this.datas[0].E * 2;
             let vx = F * cos / avgE, vy = F * sin / avgE;
-            let Maxv = 10;
+            let Maxv = 2;
             vx = Math.min(Maxv, vx), vy = Math.min(Maxv, vy);
             //  dv = -Ft/E
             src.x += (dx > 0? -vx : vx);  //  为防止 E 过小导致 dv 变化过大，每个点都取 E 的平均值

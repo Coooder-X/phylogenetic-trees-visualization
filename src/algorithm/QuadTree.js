@@ -8,8 +8,8 @@ export default class QuadTree {
         this.width = w || 1000; //  总显示区域的长宽
         this.height = h || 600;
         this.map = new Map();
-        this.theta = 0.5;
-        this.G = 35;  //  引力常数 (需要改为动态计算，适用于各种情况)
+        this.theta = 0.7;   //  0.5
+        this.G = 15;  //  引力常数 (需要改为动态计算，适用于各种情况)   //  35
     }
 
     build(nodes, datas) {
