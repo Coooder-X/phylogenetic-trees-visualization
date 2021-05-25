@@ -1,5 +1,5 @@
 <template>
-    <el-tabs class="el-tabs" v-model="editableTabsValue" type="border-card" editable @edit="handleTabsEdit">
+    <el-tabs v-model="editableTabsValue" type="border-card" editable @edit="handleTabsEdit" @tab-click="checkAdd">
         <el-tab-pane
             :key="item.name"
             v-for="(item, index) in editableTabs"
@@ -10,6 +10,11 @@
               @loadTreeInfo="loadTreeInfo"
               :svgName="item.title"></nwk-input>
             <svg-area v-else :svgName="item.title" :treeInfo="treeInfo[index]" :animate="animate" ref="svgFile"></svg-area>
+        </el-tab-pane>
+        <el-tab-pane key="add" name="add" :closable="false">
+          <span slot="label" style="font-size:18px;font-weight:bold;">
+            {{ "+" }}
+          </span>
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -120,6 +125,10 @@ export default {
           }
         });
       },
+      checkAdd(tab) {
+        if(tab.name === 'add')
+          this.handleTabsEdit(null, 'add');
+      },
       handleTabsEdit(targetName, action) {
         if (action === 'add') {
           let newTabName = ++this.tabIndex + '';
@@ -141,9 +150,9 @@ export default {
                 removeIdx = index;
                 this.treeInfo.push('');
                 var list = document.getElementById(tab.title);	//	svg 的id 为 tab 的 title
-				if(list) {
+				        if(list) {
                 	list.removeChild(list.childNodes[0]); //  删除对应的 svg 实例
-				}
+				        }
                 let nextTab = tabs[index + 1] || tabs[index - 1];
                 if (nextTab) {
                   activeName = nextTab.name;
@@ -161,7 +170,7 @@ export default {
 }
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 /deep/ .el-tabs {
     /* margin-left: 0%; */
     /* padding: 0 10px; */
@@ -176,4 +185,22 @@ export default {
     color: #303133;
     position: relative;
 }
+</style>
+ <style lang="scss" scoped>
+    /deep/ .el-tabs__item:nth-last-child(1) {
+        width: 35px;
+        height: 100%;
+        padding-left: 10px;
+        background-color:#dfdfdf;
+        border-radius: 20%;
+        text-align: center;
+        background-color:#409EFF60;
+        color: white;
+    }
+    /deep/ .el-icon-close:nth-child(2) {
+        display: none;
+    }
+    /deep/ .el-tabs__new-tab {
+        display: none;
+    }
 </style>
