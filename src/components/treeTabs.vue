@@ -9,7 +9,7 @@
               @statusChange="statusChange(index)" 
               @loadTreeInfo="loadTreeInfo"
               :svgName="item.title"></nwk-input>
-            <svg-area v-else :svgName="item.title" :treeInfo="treeInfo[index]" ref="svgFile"></svg-area>
+            <svg-area v-else :svgName="item.title" :treeInfo="treeInfo[index]" :animate="animate" ref="svgFile"></svg-area>
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -24,6 +24,9 @@ export default {
     name: "treeTabs",
     data() {
       return {
+        animate: {
+            animation: false
+        },
         hasInput: [false, false],
         treeInfo: ['', ''], //  每个进化树的 nwk 文件文本
         editableTabsValue: '2',
@@ -40,6 +43,9 @@ export default {
       }
     },
 	mounted() {
+    bus.$on('changeAnimate', data => {
+        this.animate.animation = data.animation;  //  这里只能复制变量而不是对象，否则影响到传值给子组件
+    });
 		bus.$on('getFile', data => {	//	asideBar 组件发来需要保存文件的请求，此处返回文件名和内容
 			let tab = this.getNowTab();
 			data.fileName = tab.title;

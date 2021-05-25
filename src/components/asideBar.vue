@@ -4,7 +4,6 @@
         <el-menu
             default-active="1"
             :default-openeds='["1","1-3","1-4"]'
-            class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
             background-color="#36474e"
@@ -33,6 +32,16 @@
                             @click="saveImage">
                             保存为图片
                         </el-button>
+                    </el-menu-item>
+                    <el-menu-item index="1-2">
+                        <el-switch
+                            v-model="animate.animation"
+                            class="switchStyle"
+                            active-color="#13ce66"
+                            inactive-color="#409EFF"
+                            :active-text="animate.text"
+                            @change="changeAnimate">
+                        </el-switch>
                     </el-menu-item>
                 </el-menu-item-group>
                 <el-menu-item-group title="样式">
@@ -154,7 +163,10 @@ export default {
                 ],
                 sliderDisabled: true
             },
-            
+            animate: {
+                animation: false,
+                text: '隐藏迭代过程'
+            }
         };
     },
     methods: {
@@ -184,6 +196,15 @@ export default {
         },
         handleClose(key, keyPath) {
             console.log(key, keyPath);
+        },
+        changeAnimate(data) {
+            if(data) {
+                this.animate.text = '显示迭代过程';
+                bus.$emit('changeAnimate', this.animate);
+            } else {
+                this.animate.text = '隐藏迭代过程';
+                bus.$emit('changeAnimate', this.animate);
+            }
         },
         editNodeRadius() {
             bus.$emit('editNodeRadius', this.treeStyle.nodeRadius);
@@ -221,4 +242,11 @@ export default {
     margin-left: -13%;
     margin-right: -13%;
 }
+/deep/ .switchStyle{
+    .el-switch__label {
+        position: left;
+        color: rgb(135, 194, 248);
+    }
+}
+
 </style>

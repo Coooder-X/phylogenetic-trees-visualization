@@ -46,7 +46,10 @@ export default {
     components: {EditText, EditTree, EditEdge},
     props: {
         svgName: String,
-        treeInfo: String
+        treeInfo: String,
+        animate: {
+            animation: false
+        },
     },
     data() {
         return {
@@ -126,7 +129,7 @@ export default {
         });
         this.$nextTick(() => {
             //  每个 svg 实例都有一个唯一的名字（等于对应tab的content），以便根据 id 操作 DOM 树
-            initSvg(this.svgName, this.EditData, this.treeInfo, this.saveInfo);
+            initSvg(this.svgName, this.EditData, this.treeInfo, this.saveInfo, this.animate);
         });
     },
     methods: {
