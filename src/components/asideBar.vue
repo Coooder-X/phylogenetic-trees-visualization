@@ -3,7 +3,7 @@
         <!-- Aside -->
         <el-menu
             default-active="1"
-            :default-openeds='["1","1-3","1-4"]'
+            :default-openeds='["1","1-3","1-4","1-8"]'
             @open="handleOpen"
             @close="handleClose"
             background-color="#36474e"
@@ -53,7 +53,7 @@
                                 :show-tooltip="true" 
                                 v-model="treeStyle.lineWidth" 
                                 :step="0.1"
-                                :max="20"
+                                :max="30"
                                 :disabled="treeStyle.sliderDisabled"
                                 @input="editLineWidth"/>
                         </div>  
@@ -68,9 +68,23 @@
                                 :show-tooltip="true" 
                                 v-model="treeStyle.nodeRadius" 
                                 :step="0.1"
-                                :max="20"
+                                :max="30"
                                 :disabled="treeStyle.sliderDisabled"
                                 @input="editNodeRadius"/>
+                        </div>  
+                    </el-menu-item>
+                </el-submenu>
+                <el-submenu index="1-8">
+                    <template slot="title">调整字体大小: {{treeStyle.fontSize}}</template>
+                    <el-menu-item index="1-8-1">
+                        <div class="slider2">
+                            <el-slider 
+                                :show-tooltip="true" 
+                                v-model="treeStyle.fontSize" 
+                                :step="0.1"
+                                :max="80"
+                                :disabled="treeStyle.sliderDisabled"
+                                @input="editFontSize"/>
                         </div>  
                     </el-menu-item>
                 </el-submenu>
@@ -223,6 +237,9 @@ export default {
         },
         editBackgroundColor() {
             bus.$emit('editBackgroundColor', this.treeStyle.backgroundColor);
+        },
+        editFontSize() {
+            bus.$emit('editFontSize', this.treeStyle.fontSize);
         }
     },
     mounted() {

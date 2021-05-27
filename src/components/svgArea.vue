@@ -57,6 +57,7 @@ export default {
             EditData: { //  专门传递编辑的数据的对象，用于传引用给 SDraw 对 svg 进行编辑
                 textData: { //  修改节点名称的数据块
                     editTextDialogOpen: false,
+                    fontSize: 20,
                     dataObj: {}
                 },
                 nodeData: {
@@ -91,6 +92,9 @@ export default {
             }
             this.EditData.nodeData.nodeColors[0] = 'red';
         }
+        bus.$on('editFontSize', data => {
+            this.EditData.textData.fontSize = data;
+        });
         bus.$on('editNodeRadius', data => {
             this.EditData.nodeData.nodeRadius = data;
         });

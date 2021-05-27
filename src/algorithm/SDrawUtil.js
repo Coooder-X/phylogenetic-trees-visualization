@@ -26,6 +26,7 @@ export function svgAddMousewheel(oParent, oSvg, svgControl) {    //  鼠标滚�
 var isMove = false;
 var inNodeSelect = false;
 var inEdgeSelect = false;
+var inTextSelect = false;
 
 export function svgMove(oParent, oSvg, svgControl) { //  鼠标拖动 svg 画布 (实际上鼠标动作作用于 svg 的父亲标签 oParent)
     oParent.addEventListener('mousedown', function (e) {
@@ -64,7 +65,7 @@ export function paintAllNodes(nodes, datas, pad, EditData) {
 }
 //  绘制所有节点的文字
 export function paintAllTexts(nodes, datas, G, notLeaf, filterSet, pad, EditData) {
-    let fontSize = 20;
+    let fontSize = EditData.textData.fontSize;
     nodes.forEach((node, idx) => {
         if(!filterSet.has(idx)) {   //  若name不为null
             if(notLeaf.has(idx)) { //  若当前点不是叶节点，不打印
@@ -207,6 +208,8 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, datai, idx, textDa
         oText.setAttribute('x', x);
         oText.setAttribute('y', y);
         oText.innerHTML = datai.name;
+        if(inTextSelect == false)
+            oText.setAttribute('font-size', fontSize);
     }
     else {
         oText = createShape('text', {'x':x, 'y':y, 'fill':color, 'font-size':fontSize, 'text-anchor':'middle', 'font-family':font });
@@ -217,9 +220,11 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, datai, idx, textDa
         pad.oG.appendChild(oText);  //添加到oG
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         oText.onmouseenter = function() {
+            inTextSelect = true;
             startMoveText(oText, 1.2 * fontSize, fontSize);
         };
         oText.onmouseleave = function() {
+            inTextSelect = false;
             startMoveText(oText, fontSize, 1.2 * fontSize);
         };
     }

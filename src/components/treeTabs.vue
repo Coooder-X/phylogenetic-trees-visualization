@@ -48,9 +48,9 @@ export default {
       }
     },
 	mounted() {
-    bus.$on('changeAnimate', data => {
-        this.animate.animation = data.animation;  //  这里只能复制变量而不是对象，否则影响到传值给子组件
-    });
+		bus.$on('changeAnimate', data => {
+			this.animate.animation = data.animation;  //  这里只能复制变量而不是对象，否则影响到传值给子组件
+		});
 		bus.$on('getFile', data => {	//	asideBar 组件发来需要保存文件的请求，此处返回文件名和内容
 			let tab = this.getNowTab();
 			data.fileName = tab.title;
@@ -93,9 +93,9 @@ export default {
 					
 					var a = document.createElement('a');
 					a.href = canvas.toDataURL('image/png', 1.0);  //将画布内的信息导出为png图片数据
-          if(name.indexOf('.') != -1) {   //  去掉原有的文件后缀名
-            name = name.substring(0, name.indexOf('.'));
-          }
+					if(name.indexOf('.') != -1) {   //  去掉原有的文件后缀名
+						name = name.substring(0, name.indexOf('.'));
+					}
 					a.download = name;  //设定下载名称
 					a.click(); //点击触发下载
 				}
@@ -111,61 +111,61 @@ export default {
 				}
 			}
 		},
-      statusChange(index) {
-        this.hasInput[index] = true;
-        this.$forceUpdate();
-      },
-      loadTreeInfo(svgName, treeInfo, fileName) { //  设置对应的 nwk 文本
-        this.editableTabs.forEach((tab, index) => {
-          if (tab.title === svgName) {
-            this.treeInfo[index] = treeInfo;
-			if(fileName != undefined) {
-				tab.title = fileName;	//	若是文件导入，则把 tab.title 改为文件名
+		statusChange(index) {
+			this.hasInput[index] = true;
+			this.$forceUpdate();
+		},
+		loadTreeInfo(svgName, treeInfo, fileName) { //  设置对应的 nwk 文本
+			this.editableTabs.forEach((tab, index) => {
+				if (tab.title === svgName) {
+					this.treeInfo[index] = treeInfo;
+					if(fileName != undefined) {
+						tab.title = fileName;	//	若是文件导入，则把 tab.title 改为文件名
+					}
+				}
+			});
+		},
+		checkAdd(tab) {
+			if(tab.name === 'add')
+				this.handleTabsEdit(null, 'add');
+		},
+      	handleTabsEdit(targetName, action) {
+			if (action === 'add') {
+				let newTabName = ++this.tabIndex + '';
+				this.editableTabs.push({
+					title: 'Tab' + this.tabIndex,
+					name: newTabName,
+					content: 'Tab ' + this.tabIndex + ' content'
+				});
+				this.hasInput.push(false);
+				this.editableTabsValue = newTabName;
 			}
-          }
-        });
-      },
-      checkAdd(tab) {
-        if(tab.name === 'add')
-          this.handleTabsEdit(null, 'add');
-      },
-      handleTabsEdit(targetName, action) {
-        if (action === 'add') {
-          let newTabName = ++this.tabIndex + '';
-          this.editableTabs.push({
-            title: 'Tab' + this.tabIndex,
-            name: newTabName,
-            content: 'Tab ' + this.tabIndex + ' content'
-          });
-          this.hasInput.push(false);
-          this.editableTabsValue = newTabName;
-        }
-        if (action === 'remove') {
-          let tabs = this.editableTabs;
-          let activeName = this.editableTabsValue;
-          let removeIdx = 0;
-          if (activeName === targetName) {
-            tabs.forEach((tab, index) => {
-              if (tab.name === targetName) {
-                removeIdx = index;
-                this.treeInfo.push('');
-                var list = document.getElementById(tab.title);	//	svg 的id 为 tab 的 title
-				        if(list) {
-                	list.removeChild(list.childNodes[0]); //  删除对应的 svg 实例
-				        }
-                let nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                  activeName = nextTab.name;
-                }
-              }
-            });
-          }
-          this.hasInput.splice(removeIdx, 1);
-          this.treeInfo.splice(removeIdx, 1);
-          this.editableTabsValue = activeName;
-          this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-        }
-      }
+			if (action === 'remove') {
+				let tabs = this.editableTabs;
+				let activeName = this.editableTabsValue;
+				let removeIdx = 0;
+				if (activeName === targetName) {
+					tabs.forEach((tab, index) => {
+						if (tab.name === targetName) {
+							removeIdx = index;
+							this.treeInfo.push('');
+							var list = document.getElementById(tab.title);	//	svg 的id 为 tab 的 title
+									if(list) {
+								list.removeChild(list.childNodes[0]); //  删除对应的 svg 实例
+									}
+							let nextTab = tabs[index + 1] || tabs[index - 1];
+							if (nextTab) {
+							activeName = nextTab.name;
+							}
+						}
+					});
+				}
+				this.hasInput.splice(removeIdx, 1);
+				this.treeInfo.splice(removeIdx, 1);
+				this.editableTabsValue = activeName;
+				this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+			}
+      	}
     }
 }
 </script>
