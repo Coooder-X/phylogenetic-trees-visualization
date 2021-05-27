@@ -149,9 +149,9 @@ export default {
                 nodesColor: '#000000',
                 strokeColor: '#000000',
                 edgesColor: '#DAB1D5',
-                backgroundColor: 'rgba(250, 235, 215, 0.56)',
+                backgroundColor: '#FCF4E9',
                 predefineColors: [
-                    '#ff4500',
+                    '#ff450000',
                     '#ff8c00',
                     '#ffd700',
                     '#90ee90',

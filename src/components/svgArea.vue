@@ -181,7 +181,7 @@ export default {
         height:540px;
         margin: 0%;
         /* margin:20px auto;   */
-        background-color:rgba(250, 235, 215, 0.56);
+        background-color:rgba(252, 244, 233);
         overflow:hidden; 
         /* margin-left:auto; 
         margin-right:auto; 
