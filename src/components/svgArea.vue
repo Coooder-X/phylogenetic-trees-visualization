@@ -82,8 +82,9 @@ export default {
         };
     },
     created: function() {
+        let size = 10000;
         if(this.EditData.nodeData.nodeColors.length == 0) {
-            for(let i = 0; i < 1000; ++i) {
+            for(let i = 0; i < size; ++i) {
                 this.EditData.nodeData.nodeColors.push('#000000');
                 this.EditData.nodeData.strokeColors.push('#000000');
                 this.EditData.edgeData.lineColors.push('#DAB1D5');
@@ -98,7 +99,7 @@ export default {
         });
         bus.$on('editAllNodeColor', data => {
             if(this.EditData.nodeData.nodeColors.length == 0) 
-                for(let i = 0; i < 1000; ++i) {
+                for(let i = 0; i < size; ++i) {
                     this.EditData.nodeData.nodeColors.push(data);
             } else {
                 for(let i = 0; i < this.EditData.nodeData.nodeColors.length; ++i)
@@ -107,7 +108,7 @@ export default {
         });
         bus.$on('editAllStrokeColor', data => {
             if(this.EditData.nodeData.strokeColors.length == 0) {
-                for(let i = 0; i < 1000; ++i)
+                for(let i = 0; i < size; ++i)
                     this.EditData.nodeData.strokeColors.push(data);
             } else {
                 for(let i = 0; i < this.EditData.nodeData.strokeColors.length; ++i)
@@ -120,7 +121,7 @@ export default {
         });
         bus.$on('editAllEdgeColor', data => {
             if(this.EditData.edgeData.lineColors.length == 0) {
-                for(let i = 0; i < 1000; ++i)
+                for(let i = 0; i < size; ++i)
                     this.EditData.edgeData.lineColors.push(data);
             } else {
                 for(let i = 0; i < this.EditData.edgeData.lineColors.length; ++i)

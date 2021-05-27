@@ -7,7 +7,7 @@
                 </el-form-item>
                 <el-row>
                     <el-col :span="9">
-                    <el-form-item label="节点颜色" :label-width="formLabelWidth">
+                    <el-form-item label="树边颜色" :label-width="formLabelWidth">
                         <el-color-picker
                             v-model="edgeColor"
                             :predefine="predefineColors">
