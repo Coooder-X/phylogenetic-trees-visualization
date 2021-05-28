@@ -79,7 +79,29 @@ export default {
 				let name = tab.title;
 				let node0 = document.getElementById(name).childNodes[0];
 				let node = node0.cloneNode(true);	//	复制一份 dom 节点，以便修改使得 svg 处于视窗中心
-				node.setAttribute('transform', 'translate(' + 0 + ',' + 0 + '), scale(1.2)');
+				
+			//-------------------------------------------------------------------------------------------------------------
+				let area = this.getImageCorner(node);
+				// node.setAttribute('transform', 'translate(' + area.MinX + ',' + area.MinY + '), scale(1.0)');
+				node.setAttribute('overflow', 'visible');
+				let paddingX = (area.MaxX) * 0.5, paddingY = (area.MaxY) * 0.5;
+				node.setAttribute('width', area.MaxX + paddingX);
+				node.setAttribute('height', area.MaxY + paddingY);
+				console.log(node.transform.animVal[0].matrix.e, node.transform.animVal[0].matrix.f);
+				let transformX = node.transform.animVal[0].matrix.e, transformY = node.transform.animVal[0].matrix.f;
+				transformX += area.MinX - transformX, transformY += area.MinY - transformY;	//	minmax在左上角的情况？
+				node.setAttribute('transform', 'translate(' + (-transformX + paddingX/2) + ',' + (-transformY+paddingY/2) + '), scale(1.0)');
+
+				// node.setAttribute('transform', 'translate(' + (Number)(node.getAttribute('width')) / 2 + ',' + (Number)(node.getAttribute('height')) / 2 + '), scale(1.0)');
+				// let offsetWidth =  (Number)(node.getAttribute('width')) / 2, offsetHeight =  (Number)(node.getAttribute('height')) / 2;
+				// let k = 5;
+				// node.setAttribute('width', k * offsetWidth);
+				// node.setAttribute('height', k * offsetHeight);
+				// // console.log(node.getAttribute('transform'), node.getAttribute('width'), node.getAttribute('height'));
+				// node.setAttribute('transform', 'translate(' + offsetWidth + ',' + offsetHeight + '), scale(1.0)');
+				// console.log(node.getAttribute('transform'));
+			//-------------------------------------------------------------------------------------------------------------
+
 				let svgXml = new XMLSerializer().serializeToString(node);	//	svg 的 xml 格式字符串
 				let image = new Image();
 				image.src = 'data:image/svg+xml;base64,' + window.btoa(svgXml);	//	base64 编码
@@ -165,7 +187,20 @@ export default {
 				this.editableTabsValue = activeName;
 				this.editableTabs = tabs.filter(tab => tab.name !== targetName);
 			}
-      	}
+      	},
+		getImageCorner(svgDom) {
+			let circleList = svgDom.getElementsByTagName('circle');
+			let MaxX = -Infinity, MinX = Infinity, MaxY = -Infinity, MinY = Infinity;
+			for(let i = 0; i < circleList.length; ++i) {
+				let x = circleList[i].getAttribute('cx'), y = circleList[i].getAttribute('cy');
+				MaxX = Math.max(x, MaxX);
+				MaxY = Math.max(y, MaxY);
+				MinX = Math.min(x, MinX);
+				MinY = Math.min(y, MinY);
+			}
+			console.log(MaxX, MinX, MaxY, MinY);
+			return {MaxX: MaxX, MinX: MinX, MaxY: MaxY, MinY: MinY};
+		}
     }
 }
 </script>
