@@ -13,13 +13,13 @@ export default function(svgName, EditData, treeInfo, saveInfo, animate) {
     var oG_Node = createShape('g', {'style':'cursor:pointer', 'class':'circleStyle'});  //  鼠标悬浮在形状上时为手指icon
     var oG_Line = createShape('g', {'style':'cursor:pointer', 'class':'lineStyle'});
     var oG_Text = createShape('g', {'style':'cursor:pointer', 'class':'textStyle'});
-    var oSvg = createShape('svg', {'xmlns':svgNS, 'width':oParent.offsetWidth*8, 'height':oParent.offsetHeight*8 });
+    var oSvg = createShape('svg', {'xmlns':svgNS, 'width':oParent.offsetWidth*12, 'height':oParent.offsetHeight*12 });
     oSvg.style.backgroundColor = 'rgba(252, 244, 233)';   // 导出图片需要的背景色初始化
 
     //  控制 svg 缩放移动的变量，为使多个 tab 分离，不在 Draw.js 中使用全局变量，而是每个实例单独一份
     let svgOptionVariables = {   
         scale: 1.0,
-        viewBoxX: -3.5*oParent.offsetWidth, viewBoxY: -3.5*oParent.offsetHeight,
+        viewBoxX: -5.5*oParent.offsetWidth, viewBoxY: -5.5*oParent.offsetHeight,
         startX: 0, startY: 0,
         tmpx: 0, tmpy: 0 //  有关 svg 画布平移、缩放的全局参数
     }
@@ -44,7 +44,7 @@ export default function(svgName, EditData, treeInfo, saveInfo, animate) {
     let tree = getTree(info);
     console.log(tree);
     var treeWidth = 4000 * 15, treeHeight = 2400 * 15;
-    let screenWidth = oParent.offsetWidth*8, screenHeight = oParent.offsetHeight*8;
+    let screenWidth = oParent.offsetWidth*12, screenHeight = oParent.offsetHeight*12;
     var nodes = initTreeShape(info, treeWidth, treeHeight), edges = tree.edges, datas = tree.datas;
     
     let G = createGraph(edges); //  进化树的邻接表表示

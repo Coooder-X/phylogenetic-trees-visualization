@@ -81,25 +81,24 @@ export default {
 				let node = node0.cloneNode(true);	//	复制一份 dom 节点，以便修改使得 svg 处于视窗中心
 				
 			//-------------------------------------------------------------------------------------------------------------
-				let area = this.getImageCorner(node);
-				// node.setAttribute('transform', 'translate(' + area.MinX + ',' + area.MinY + '), scale(1.0)');
+			/*下部分为预处理 svg 画布位置，截取刚好包括图形的部分。
+				·tips: 用canvas作为svg图形载体时，是将处于屏幕坐标系(0, 0)处开始的 svg 画布，以自定义的长宽进行截取。
+				而我们的 svg 画布是以根节点固定在屏幕中心的，即屏幕坐标系(screenW/2, screenH/2)，图形可能超出可视范围，
+				而svg画布长宽是屏幕的12倍，因此svg的初始坐标在屏幕坐标系原点的左上方，具体数值通过下面的transformX取得。
+				·因此导出图像时，我们要移动svg画布，将包裹进化树的最小矩形的左上角顶点，移动至屏幕坐标系(0, 0)处并添加一个padding。
+				计算中，需要注意的是 getImageCorner() 获取的进化树的最小矩形顶点坐标最值是相对于 svg 画布的坐标；
+				transform 的两个参数是svg画布左上角是在屏幕坐标系中的绝对位置；
+			*/
+				let area = this.getImageCorner();
 				node.setAttribute('overflow', 'visible');
-				let paddingX = (area.MaxX) * 0.5, paddingY = (area.MaxY) * 0.5;
-				node.setAttribute('width', area.MaxX + paddingX);
-				node.setAttribute('height', area.MaxY + paddingY);
-				console.log(node.transform.animVal[0].matrix.e, node.transform.animVal[0].matrix.f);
-				let transformX = node.transform.animVal[0].matrix.e, transformY = node.transform.animVal[0].matrix.f;
-				transformX += area.MinX - transformX, transformY += area.MinY - transformY;	//	minmax在左上角的情况？
-				node.setAttribute('transform', 'translate(' + (-transformX + paddingX/2) + ',' + (-transformY+paddingY/2) + '), scale(1.0)');
-
-				// node.setAttribute('transform', 'translate(' + (Number)(node.getAttribute('width')) / 2 + ',' + (Number)(node.getAttribute('height')) / 2 + '), scale(1.0)');
-				// let offsetWidth =  (Number)(node.getAttribute('width')) / 2, offsetHeight =  (Number)(node.getAttribute('height')) / 2;
-				// let k = 5;
-				// node.setAttribute('width', k * offsetWidth);
-				// node.setAttribute('height', k * offsetHeight);
-				// // console.log(node.getAttribute('transform'), node.getAttribute('width'), node.getAttribute('height'));
-				// node.setAttribute('transform', 'translate(' + offsetWidth + ',' + offsetHeight + '), scale(1.0)');
-				// console.log(node.getAttribute('transform'));
+				let paddingX = (area.MaxX - area.MinX) * 0.2, paddingY = (area.MaxY - area.MinY) * 0.2;
+				let svgW = (Number)(node.getAttribute('width')), svgH = (Number)(node.getAttribute('height'));
+				let screenW = svgW / 12, screenH = svgH / 12;	//	12 是 svg 画布的宽度在 main 中定义为可视区域的 12 倍
+				let transformX = node.transform.animVal[0].matrix.e, transformY = node.transform.animVal[0].matrix.f;	//	获取 transform 的值
+				let tx = 0, ty = 0;
+				tx = transformX - (area.MinX - (svgW / 2 - screenW / 2 + paddingX / 2));
+				ty = transformY - (area.MinY - (svgH / 2 - screenH / 2 + paddingY / 2));
+				node.setAttribute('transform', 'translate(' + tx + ',' + ty + '), scale(1.0)');
 			//-------------------------------------------------------------------------------------------------------------
 
 				let svgXml = new XMLSerializer().serializeToString(node);	//	svg 的 xml 格式字符串
@@ -107,8 +106,8 @@ export default {
 				image.src = 'data:image/svg+xml;base64,' + window.btoa(svgXml);	//	base64 编码
 				image.onload = function() {
 					var canvas = document.createElement('canvas');  //准备空画布
-					canvas.width = node.getAttribute('width');
-					canvas.height = node.getAttribute('height');
+					canvas.width = (String)(area.MaxX - area.MinX + paddingX);	//	以合适的长宽截取svg画布图像
+					canvas.height = (String)(area.MaxY - area.MinY + paddingY);
 
 					var context = canvas.getContext('2d');  //取得画布的2d绘图上下文
 					context.drawImage(image, 0, 0);
@@ -188,15 +187,18 @@ export default {
 				this.editableTabs = tabs.filter(tab => tab.name !== targetName);
 			}
       	},
-		getImageCorner(svgDom) {
-			let circleList = svgDom.getElementsByTagName('circle');
+		getImageCorner() {	//	根据text标签，获取整个 svg 的边界坐标（相对于 svg 画布的）
+			let textList = document.getElementsByTagName('text');
 			let MaxX = -Infinity, MinX = Infinity, MaxY = -Infinity, MinY = Infinity;
-			for(let i = 0; i < circleList.length; ++i) {
-				let x = circleList[i].getAttribute('cx'), y = circleList[i].getAttribute('cy');
-				MaxX = Math.max(x, MaxX);
-				MaxY = Math.max(y, MaxY);
-				MinX = Math.min(x, MinX);
-				MinY = Math.min(y, MinY);
+			for(let i = 0; i < textList.length; ++i) {
+				let x = textList[i].getBBox().x, y = textList[i].getBBox().y;	//	getBBox 返回包裹元素的最小矩形长宽，以及元素坐标
+				let dx = textList[i].getBBox().width;	//	dx 是文字的宽度
+				if(x == 0 && y == 0 && dx == 0 && dy == 0)
+					continue;
+				MaxX = Math.max(x + dx, MaxX);	//	都根据文字宽度计算
+				MaxY = Math.max(y + dx, MaxY);
+				MinX = Math.min(x - dx, MinX);
+				MinY = Math.min(y - dx, MinY);
 			}
 			console.log(MaxX, MinX, MaxY, MinY);
 			return {MaxX: MaxX, MinX: MinX, MaxY: MaxY, MinY: MinY};
