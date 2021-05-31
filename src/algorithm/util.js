@@ -245,3 +245,46 @@ export function processLeaf(G) {
 	});
 	return notLeaf;
 }
+
+export function deleteSubTree(idx, nodes, edges, datas) {
+	let DirectG = createDirectGraph(edges);	//	获得树的有向图，孩子往父亲方向不连通
+	let que = new Array(), now = idx;
+	let deleteList = new Set();
+    que.push(now);
+    while(que.length) {
+		now = que[0];
+        que.shift();
+		deleteList.add(now);
+		for(let i = 0; i < G[now].length; ++i) {
+			que.push(G[now][i].pos);
+		}
+	}
+	let i = nodes.length - 1;
+	while(i >= 0) {
+		if(deleteList.has(i)) {
+			nodes.splice(i, 1);
+			datas.splice(i, 1);
+			let toSet = new Set();
+			for(let j = 0; j < G[i].length; ++j) {
+				toSet.add(G[i][j].pos);	//	记录符合条件的要删的孩子子节点
+			}
+			let j = edges.length - 1;
+			while(j >= 0) {
+				if(j == i && toSet.has(edges[j].target)) {
+					edges.splice(j, 1);
+				}
+			}
+		}
+		i--;
+	}
+}
+
+export function createDirectGraph(edges) {   //  根据edges建立图邻接表
+    let G = new Array();
+    for(let i = 0; i < edges.length + 1; ++i)
+        G.push(new Array());
+    for(let i = 0; i < edges.length; ++i) {
+        G[edges[i].source].push({pos: edges[i].target, originLen: edges[i].originLen, len: edges[i].length});
+    }
+    return G;
+}
