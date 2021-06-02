@@ -2,7 +2,7 @@
     <el-container>
         <el-header height="50px">
             <!-- <header-bar></header-bar> -->
-            <img class="logo" src='./assets/weblogo3.png'>
+            <img class="logo" src='./assets/weblogo4.png'>
         </el-header>
         <el-container>
             <aside-bar></aside-bar>

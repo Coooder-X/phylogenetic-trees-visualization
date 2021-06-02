@@ -221,11 +221,11 @@ function svgText(x, y, pad, alpha = 0, fontSize, font, color, datai, idx, textDa
         pad.oSvg.appendChild(pad.oG);  //添加到oSvg
         oText.onmouseenter = function() {
             inTextSelect = true;
-            startMoveText(oText, 1.2 * fontSize, fontSize);
+            startMoveText(oText, 1.2 , 1, textData);
         };
         oText.onmouseleave = function() {
+            startMoveText(oText, 1, 1.2, textData);
             inTextSelect = false;
-            startMoveText(oText, fontSize, 1.2 * fontSize);
         };
     }
     oText.setAttribute("text-anchor", "start"); //  text-anchor="start"时，(x,y)为<text>的起始坐标
@@ -309,9 +309,9 @@ function startMoveLine(obj, begin, end, edgeData) {
 }
 
 //鼠标移入移出text时的弹性变化
-function startMoveText(obj, r1, r2) {
-    var tarR = r1;
-    var nowR = r2;
+function startMoveText(obj, begin, end, textData) {
+    var tarR = begin * textData.fontSize;
+    var nowR = end * textData.fontSize;
     obj.speed = 0.7 * (tarR > nowR? 1 : -1);
     clearInterval(obj.timer);
     obj.timer = setInterval(function(){
