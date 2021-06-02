@@ -1,7 +1,7 @@
 import ManyBody from "./algorithm/manyBody.js";
 import {judge, choose, caldis, getNodePair, createGraph} from "./algorithm/stop.js" ;
-import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf, fatherEdgeAngle} from "./algorithm/util.js";
-import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove} from "./algorithm/SDrawUtil.js";
+import {getTree, nwk2json, initTreeShape, processNoneName, processLeaf, fatherEdgeAngle, json2nwk, treeToJson} from "./algorithm/util.js";
+import {paintAllLinks, paintAllNodes, paintAllTexts, createShape, positionShift, svgAddMousewheel, svgMove, clearSvgShape} from "./algorithm/SDrawUtil.js";
 import randomNewick from "./algorithm/AutoNwk.js";
 
 export default function(svgName, EditData, treeInfo, saveInfo, animate) {
@@ -96,6 +96,7 @@ export default function(svgName, EditData, treeInfo, saveInfo, animate) {
             EditData.NodeCount = manyBody.nodes.length;
             G = createGraph(manyBody.edges);
             saveInfo.G = G, saveInfo.datas = manyBody.datas;
+            reloadTree();
 
             pairName = choose(manyBody.edges, manyBody.datas), pair = []; //  添加节点后，重新迭代
             record = 0;
@@ -103,6 +104,7 @@ export default function(svgName, EditData, treeInfo, saveInfo, animate) {
             EditData.edgeData.isEditing = false;
             G = createGraph(manyBody.edges);
             saveInfo.G = G, saveInfo.datas = manyBody.datas;
+            reloadTree();
             pairName = choose(manyBody.edges, manyBody.datas), pair = []; //  修改边长后，重新迭代
             record = 0;
         }
@@ -128,6 +130,19 @@ export default function(svgName, EditData, treeInfo, saveInfo, animate) {
             return;
         record = caldis(pair);
         manyBody.step();
+    }
+
+    function reloadTree() {
+        clearSvgShape(pad_Link);clearSvgShape(pad_Node);clearSvgShape(pad_Text);
+        let nwk = json2nwk(treeToJson(saveInfo.datas, saveInfo.notLeaf, saveInfo.G));
+        let newTree = getTree(nwk2json(nwk));
+        manyBody.nodes = initTreeShape(nwk2json(nwk), treeWidth, treeHeight), manyBody.edges = newTree.edges, manyBody.datas = newTree.datas;
+        G = createGraph(manyBody.edges); //  进化树的邻接表表示
+        noneNameNodeIdx = processNoneName(manyBody.datas);
+        notLeaf = processLeaf(G);
+        saveInfo.notLeaf = notLeaf;
+        saveInfo.G = G;
+        saveInfo.datas = manyBody.datas;
     }
     
 }

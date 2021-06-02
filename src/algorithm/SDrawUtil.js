@@ -340,3 +340,9 @@ export function positionShift(screenWidth, screenHeight, treeWidth, treeHeight, 
     }
     return shiftedNodes;
 }
+
+export function clearSvgShape(pad) {
+    while(pad.oG.lastChild) {
+        pad.oG.removeChild(pad.oG.lastChild);
+    }
+}
