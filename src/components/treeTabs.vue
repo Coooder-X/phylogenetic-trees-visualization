@@ -193,7 +193,7 @@ export default {
 			for(let i = 0; i < textList.length; ++i) {
 				let x = textList[i].getBBox().x, y = textList[i].getBBox().y;	//	getBBox 返回包裹元素的最小矩形长宽，以及元素坐标
 				let dx = textList[i].getBBox().width;	//	dx 是文字的宽度
-				if(x == 0 && y == 0 && dx == 0 && dy == 0)
+				if(x == 0 && y == 0 && dx == 0)
 					continue;
 				MaxX = Math.max(x + dx, MaxX);	//	都根据文字宽度计算
 				MaxY = Math.max(y + dx, MaxY);
