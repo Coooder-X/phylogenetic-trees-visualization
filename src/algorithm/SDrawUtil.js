@@ -6,7 +6,8 @@ export function svgAddMousewheel(oParent, oSvg, svgControl) {    //  鼠标滚�
         let gap = 0.08;
         if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件               
             if (e.wheelDelta > 0) { //当滑轮向上滚动时  
-                svgControl.scale -= gap;
+                if(svgControl.scale > gap)
+                    svgControl.scale -= gap;
             }  
             if (e.wheelDelta < 0) { //当滑轮向下滚动时  
                 svgControl.scale += gap;
@@ -16,7 +17,8 @@ export function svgAddMousewheel(oParent, oSvg, svgControl) {    //  鼠标滚�
                 svgControl.scale += gap;
             }  
             if (e.detail< 0) { //当滑轮向上滚动时  
-                svgControl.scale -= gap;
+                if(svgControl.scale > gap)
+                    svgControl.scale -= gap;
             }  
         } 
         oSvg.setAttribute('transform', 'translate(' + svgControl.viewBoxX  + ', ' + svgControl.viewBoxY + ') scale(' + svgControl.scale + ')');
